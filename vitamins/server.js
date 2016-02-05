@@ -1,36 +1,38 @@
-// ---------------------------------------------------------------------------------
-// Server using express
-var express = require('express');
-var doT = require('express-dot');
+// *********************
+//  * Module dependencies
+//  *********************
+express = require('express'),
+    http    = require('http'),
+    path    = require('path'),
+    pgp = require('pg-promise')(/*options*/), // Connection to database
+    db = pgp("postgres:///vitamins"),
+    expressLayouts = require('express-ejs-layouts');
+ 
 var app = express();
-var bodyParser = require('body-parser');
+ 
 
-// Connection to database
-pgp = require('pg-promise')(/*options*/);
-var db = pgp("postgres:///vitamins");
-// Import file with angular logic
-// var ang = require('./angular_info.js');
-
-// Create application/x-www-form-urlencoded parser
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
-
-// app.use(express.static('public'));
-// Tell app that the views are located in the /views folder, 
-// then we tell it to use the ‘dot’ templating engine, 
-// and tell it that the extension for our views is ‘html’
-app.set('views', __dirname+'/views');
-app.set('view engine', 'dot');
-app.engine('html', doT.__express);
+/***************
+ * Configuration
+ ***************/
+app.engine('html', require('ejs').renderFile);
+app.set('port', process.env.PORT || 3000);
+app.set('views', __dirname + '/views');
 app.use('/css',express.static(__dirname+'/public/css'));
 app.use('/img',express.static(__dirname+'/public/img'));
 app.use('/js',express.static(__dirname+'/public/js'));
+app.set('view engine', 'ejs');
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(expressLayouts);
 
-// Get handler
-app.get('/', function (req, res){
-db.query("SELECT * from vitamins")
+/********
+ * Routes
+ ********/
+// serve index and view partials
+app.get('/', function(req, res){
+  db.query("select * from vitamins, dosages where vitamins.id = v_id;")
     .then(function (data) {
         var templateData = {"title":"Vitamins", "vitamins":data};
-        res.render('index.html', templateData, function(err, html) {
+        res.render('index.ejs', templateData, function(err, html) {
           res.send(html);
         });
     })
@@ -39,24 +41,9 @@ db.query("SELECT * from vitamins")
     });
 });
 
-// Post handler for form submission
-app.post('/process_post', urlencodedParser, function (req, res) {
-
-   // Prepare output in JSON format
-   response = {
-       first_name:req.body.first_name,
-       last_name:req.body.last_name
-   };
-   console.log(response);
-   res.end(JSON.stringify(response));
-})
-
-var server = app.listen(8081, function () {
-  var host = server.address().address
-  var port = server.address().port
-  console.log("Example app listening at http://%s:%s", host, port)
+/**************
+ * Start Server
+ **************/
+http.createServer(app).listen(app.get('port'), function () {
+  console.log('Server listening on port ' + app.get('port'));
 });
-
-
-
-

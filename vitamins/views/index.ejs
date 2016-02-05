@@ -1,0 +1,49 @@
+<head>
+	<link rel="stylesheet" href="/css/vitamins_page.css" crossorigin="anonymous">
+</head>
+<body ng-app="app">
+<div  ng-controller="VitaminsController"  ng-init="init('<%= JSON.stringify(vitamins) %>')">
+
+<form action="http://127.0.0.1:8081/process_post" method="POST">
+	<div class="form-group">
+		<div class="row">
+			<div class="col-md-4"></div>
+			<div class="col-md-4">
+			  	<div class ="checkbox_wrapper">
+					<div ng-repeat="vitamin in vitamins">
+			  			<input type="checkbox" name="{{vitamin.name}}" ng-click="AddOrRemoveVitamin(vitamin)" ng-model="vitamin.Selected">{{vitamin.name}}  
+					</div>
+				</div>
+				<input type="submit" value="Submit">
+				<table class = "selected_vitamins_wrapper">
+					<tr>
+						<th>Vitamin </th>
+						<th> Dosage </th>
+						<th> Number of times per day </th>
+						<th></th>
+					</tr>
+					<tr ng-repeat="vitamin in selected_vitamins">
+						<td>{{vitamin.name}}</td>
+						<td> 
+							 <select name="dosage" >
+      							<option ng-repeat="dose in MakeRange(vitamin.dose_range,10)" value="dose">{{dose}} {{vitamin.units}}</option> <!-- add unit -->
+   							 </select>
+						</td>
+						<td>
+							<select name="times_per_day" >
+      							<option ng-repeat="dose in MakeRange(vitamin.times_per_day,vitamin.times_per_day)" value="dose">{{vitamin.times_per_day}}</option> <!-- add unit -->
+   							 </select>
+						</td>
+						<td>
+							<button ng-click="AddOrRemoveVitamin(vitamin)">X</button>
+						</td>
+					<tr>
+				</table>
+			</div>
+			<div class="col-md-4"></div>
+		</div>
+	
+	</div>	
+</form>
+</div>
+</body>
