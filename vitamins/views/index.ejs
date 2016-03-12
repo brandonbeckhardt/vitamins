@@ -4,43 +4,62 @@
 <body ng-app="app">
 <div  ng-controller="VitaminsController"  ng-init="init('<%= JSON.stringify(vitamins) %>')">
 
-<form action="http://127.0.0.1:8081/process_post" method="POST">
+<form action="/confirmation" method="POST" name="vitamin_form">
 	<div class="form-group">
 		<div class="row">
-			<div class="col-md-4"></div>
-			<div class="col-md-4">
-			  	<div class ="checkbox_wrapper">
+			<div class="main_wrapper">
+			  	<div class ="checkbox_wrapper generic_wrapper">
 					<div ng-repeat="vitamin in vitamins">
-			  			<input type="checkbox" name="{{vitamin.name}}" ng-click="AddOrRemoveVitamin(vitamin)" ng-model="vitamin.Selected">{{vitamin.name}}  
+			  			<input type="checkbox" name="{{vitamin.name}}" ng-click="AddOrRemoveVitamin(vitamin)" ng-model="vitamin.Selected">
+			  			<label class="control-label">{{vitamin.name}}  </label>
 					</div>
 				</div>
-				<input type="submit" value="Submit">
-				<table class = "selected_vitamins_wrapper">
-					<tr>
-						<th>Vitamin </th>
-						<th> Dosage </th>
-						<th> Number of times per day </th>
-						<th></th>
-					</tr>
-					<tr ng-repeat="vitamin in selected_vitamins">
-						<td>{{vitamin.name}}</td>
-						<td> 
-							 <select name="dosage" >
-      							<option ng-repeat="dose in MakeRange(vitamin.dose_range,10)" value="dose">{{dose}} {{vitamin.units}}</option> <!-- add unit -->
-   							 </select>
-						</td>
-						<td>
-							<select name="times_per_day" >
-      							<option ng-repeat="dose in MakeRange(vitamin.times_per_day,vitamin.times_per_day)" value="dose">{{vitamin.times_per_day}}</option> <!-- add unit -->
-   							 </select>
-						</td>
-						<td>
-							<button ng-click="AddOrRemoveVitamin(vitamin)">X</button>
-						</td>
-					<tr>
-				</table>
-			</div>
-			<div class="col-md-4"></div>
+				<div class="generic_wrapper">
+					<table class = "vitamins_table">
+						<tr>
+							<th>Vitamin </th>
+							<th> Dosage </th>
+							<th> Number of times per day </th>
+							<th> Price </th>
+							<th></th>
+						</tr>
+						<tr ng-repeat="vitamin in selected_vitamins">
+							<td>{{vitamin.name}}</td>
+							<input type="hidden" name="vitamin_name" value="{{vitamin.name}}" >
+							<input type="hidden" name="vitamin_id" value="{{vitamin.id}}" >
+							<td> 
+								 <select name="dosage" class="form-control" ng-model="dose_amount" ng-options="dose.value as dose.value for dose in vitamin.dosages track by dose.value" required>
+	      						<!-- add unit -->
+	      							<option value="">Select Dosage</option> 
+	   							 </select>
+	   							 <span ng-show="vitamin_form.dosage.$error.required">Please Select Dosage.</span>
+							</td>
+							<td>
+								<select name="times_per_day" class="form-control" ng-model="num_times_per_day" ng-options="tpd.value as tpd.value for tpd in vitamin.tpd track by tpd.value" required>
+									<option value="">Select Times Per Day </option> 
+	   							 </select>
+	   							 <span ng-show="vitamin_form.times_per_day.$error.required">The Timers Per Day is required.</span>
+	   						
+	  
+							</td>
+							<td pricing>
+								<div name="vit_price" class="form-control pricing">
+								{{(dose_amount * vitamin.price_per_unit).toFixed( 2 )}} ({{vitamin.price_per_unit}}/{{vitamin.units}})
+	      						</div>
+	      						<input type="hidden" name="price" value="{{(dose_amount * vitamin.price_per_unit).toFixed( 2 )}}">
+							</td>
+							<td>
+								<button class="form-control" ng-click="AddOrRemoveVitamin(vitamin)">X</button>
+							</td>
+						<tr>
+						<tr>
+							<td>Total Price:</td>	
+							<td>{{CalculateTotalPrice()}}</td>	
+							<input type="hidden" name="total_price" value="{{CalculateTotalPrice()}}">
+						</tr>
+					</table>
+				</div>
+				<input type="submit" value="Confirm Order" class="form-control submit_button">
 		</div>
 	
 	</div>	

@@ -1,0 +1,13 @@
+<head>
+	<link rel="stylesheet" href="/css/vitamins_page.css" crossorigin="anonymous">
+</head>
+<body ng-app="app">
+<div  ng-controller="OrderSuccessful"  ng-init="init('<%= JSON.stringify(order_id) %>')">
+	<div class="main_wrapper">
+		<div class="generic_wrapper">
+			<div class="specific_page_header">
+			Congratulations, you've placed an order.  Your order number is {{order_id}}!
+		</div>
+		</div>	
+	</div>
+</body>

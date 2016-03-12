@@ -1,0 +1,38 @@
+<head>
+	<link rel="stylesheet" href="/css/vitamins_page.css" crossorigin="anonymous">
+</head>
+<body ng-app="app">
+<div  ng-controller="ConfirmationController"  ng-init="init('<%= JSON.stringify(data) %>')">
+
+
+	<div class="main_wrapper">
+		<div class="specific_page_header">
+			Confirm Order
+		</div>
+		<div class="generic_wrapper">
+			Vitamin Composition:
+			<table class = "vitamins_table confirmation_table">
+				<tr>
+					<th>Vitamin </th>
+					<th> Dosage </th>
+					<th> Number of times per day </th>
+					<th> Price </th>
+
+				</tr>
+				<tr ng-repeat="vitamin in vitamin_info">
+					<td>{{vitamin.vitamin}}</td>
+					<td> {{vitamin.dosage}}</td>
+					<td>{{vitamin.times_per_day}}<!-- add unit --></td>
+					<td>${{vitamin.price}}</td>
+				<tr>
+			</table>
+			<div>Total Price: ${{total_price}} </div>
+			<div>Address: {{GetAddress()}}</div>
+		</div>
+			<form action="/submit_order" method="POST">
+				<input type="hidden" name="order_data" value="{{data}}">
+				<input type="submit" value="Submit Order" class="form-control submit_button">
+			</form>
+		</div>	
+	</div>
+</body>
