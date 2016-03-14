@@ -5,9 +5,17 @@ express = require('express'),
     http    = require('http'),
     path    = require('path'),
     pgp = require('pg-promise')(/*options*/), // Connection to database
-    db = pgp("postgres:///vitamins"),
     expressLayouts = require('express-ejs-layouts');
-    bodyParser = require('body-parser')
+    bodyParser = require('body-parser');
+    var configDB = require('./config/database.js');
+    var db = pgp(configDB.url);
+    // For signup/login
+    var passport = require('passport');
+    var flash    = require('connect-flash');
+
+    var morgan       = require('morgan');
+    var cookieParser = require('cookie-parser');
+    var session      = require('express-session');
 var app = express();
  
 
@@ -15,18 +23,26 @@ var app = express();
  * Configuration
  ***************/
 app.engine('html', require('ejs').renderFile);
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 6654);
 app.set('views', __dirname + '/views');
-app.use('/css',express.static(__dirname+'/public/css'));
-app.use('/img',express.static(__dirname+'/public/img'));
-app.use('/js',express.static(__dirname+'/public/js'));
+app.use('/css',express.static(__dirname+'/app/css'));
+app.use('/img',express.static(__dirname+'/app/img'));
+app.use('/js',express.static(__dirname+'/app/js'));
 app.set('view engine', 'ejs');
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'app')));
 app.use(expressLayouts);
-// parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
-// parse application/json
 app.use(bodyParser.json())
+// For signup/login
+// required for passport
+app.use(session({
+ secret: 'ksdajflsdkmalskdfjldksmflska',
+ resave: true,
+ saveUninitialized: true
+ })); // session secret
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+app.use(flash()); // use connect-flash for flash messages stored in session
 
 /********
  * Routes
@@ -44,9 +60,10 @@ app.get('/', function(req, res){
     });
 });
 app.get('/new_user', function(req, res){
-    res.render('new_user.ejs', function(err, html) {
-      res.send(html);
-    });
+    res.render('new_user.ejs');
+});
+app.get('/login', function(req, res){
+    res.render('login.ejs');
 });
 
 app.post('/create_user',function(req, res){
@@ -174,6 +191,20 @@ ValueNamesToQuery = function(value_names){
     }
     return query+") "
  };
+ // Login/Logout Info
+  app.get('/logout', function(req, res) {
+        req.logout();
+        res.redirect('/');
+    });
+ // route middleware to make sure a user is logged in.
+ // Not used yet
+function isLoggedIn(req, res, next) {
+    // if user is authenticated in the session, carry on 
+    if (req.isAuthenticated())
+        return next();
+    // if they aren't redirect them to the home page
+    res.redirect('/');
+}
 
 
 /**************
