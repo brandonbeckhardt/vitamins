@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
  ********/
  // app/routes.js
 module.exports = function(app, passport) {
+
 // serve index and view partials
 app.get('/', function(req, res){
     var Vitamin = require("./models/vitamin");

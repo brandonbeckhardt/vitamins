@@ -33,8 +33,6 @@ angular_app.controller('VitaminsController', function($scope, $attrs) {
 			}
 		}
 	}
-
-
 	$scope.AddOrRemoveVitamin = function(vitamin){
 		var index = $scope.selected_vitamins.indexOf(vitamin);
 		 if (index > -1){ //Remove element
@@ -42,7 +40,6 @@ angular_app.controller('VitaminsController', function($scope, $attrs) {
 			$scope.selected_vitamins.splice(index, 1);
 		} else{ //Add element
 			$scope.selected_vitamins.push(vitamin);
-			console.log(vitamin);
 		}
 	}
 	$scope.CalculateTotalPrice = function(){
