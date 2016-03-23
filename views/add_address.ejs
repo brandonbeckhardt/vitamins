@@ -1,0 +1,39 @@
+<head>
+	<link rel="stylesheet" href="/css/vitamins_page.css" crossorigin="anonymous">
+    <script type= "text/javascript" src = "js/countries.js"></script>
+</head>
+<body>
+<div class="col-sm-6 col-sm-offset-3">
+    <h1>Add Address</h1>
+
+    <!-- LOGIN FORM -->
+    <form action="/add_address" method="post">
+    	<div class="form-group">
+            <label>Street</label>
+            <input type="text" class="form-control" name="street">
+        </div>
+        <div class="form_group">
+            <label>Country</label>
+            <select id="country" name ="country" class="form-control"></select>
+        </div>
+        <div class="form_group">
+            <label>State</label>
+            <select name ="state" id ="state" class="form-control"></select>
+        </div>
+         <script language="javascript">
+            populateCountries("country", "state");
+         </script>
+
+        <div class="form-group">
+            <label>Zip Code</label>
+            <input type="number" class="form-control" name="zip_code">
+        </div>
+        <div class="form-group">
+            <label>City</label>
+            <input type="text" class="form-control" name="city">
+        </div>
+        <button type="submit" class="btn btn-warning btn-lg">Add Address!</button>
+    </form>
+    <hr>
+</div>
+</body>

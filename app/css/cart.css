@@ -1,0 +1,16 @@
+
+/*Confirmation Page*/
+.cart_table td{
+	
+	padding: 5px;
+}
+.cart_table th{
+	padding: 5px;
+}
+tbody.custom_vitamin_divider{
+	border-top: 1px dotted black;
+	padding: 10px;
+}
+.save_for_later{
+	padding:3;
+}

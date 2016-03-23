@@ -24,7 +24,7 @@ mongoose.connect(configDB.url); // connect to our database
 require('./config/passport')(passport); // pass passport for configuration
 
 app.engine('html', require('ejs').renderFile);
-app.set('port', process.env.PORT || 6654);
+app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.use('/css',express.static(__dirname+'/app/css'));
 app.use('/img',express.static(__dirname+'/app/img'));

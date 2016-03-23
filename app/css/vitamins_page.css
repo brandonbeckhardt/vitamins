@@ -34,8 +34,6 @@
 	width: 35%;
 	float: right;
 }
-
-
 /*New user page*/
 .new_user_form{
 	width: 70%;
@@ -53,12 +51,4 @@
 	font-size: 20pt;
 	margin-bottom: 10px;
 	margin-bottom: 10px;
-}
-/*Confirmation Page*/
-.confirmation_table td{
-	border-top: 1px dotted black;
-	padding: 15px;
-}
-.confirmation_table th{
-	padding: 15px;
 }

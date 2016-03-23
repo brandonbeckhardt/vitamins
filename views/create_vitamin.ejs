@@ -1,49 +1,43 @@
 <head>
     <link rel="stylesheet" href="/css/vitamins_page.css" crossorigin="anonymous">
 </head>
-<body ng-app="app">
-<div  ng-controller="NewUser">
-    <div class="main_wrapper">
-        <div class="specific_page_header">
-            Create Vitamin.
-        </div>
-    </div>
-</body>
+<body>
+
 
 <div class="col-sm-6 col-sm-offset-3">
 
-    <h1><span class="fa fa-sign-in"></span> Signup</h1>
+    <h1>Create Vitamin</h1>
 
     <!-- show any messages that come back with authentication -->
     <% if (message.length > 0) { %>
-        <div class="alert alert-danger"><%= message %></div>
+        <div class="alert alert-success"><%= message %></div>
     <% } %>
     Note there is no authenitcation. Make sure the info you provide is fully formed and valid and it
     does not already exist in the database.
     <form action="/create_vitamin" method="post", name="vitamin">
         <div class="form-group">
             <label>Vitamin Name</label>
-            <input type="text" class="form-control" name="name">
+            <input type="text" class="form-control"  placeholder="Ex: Vitamin A" name="name">
         </div>
         <div class="form-group">
             <label>Decscription</label>
-            <input type="text" class="form-control" name="description">
+            <input type="text" class="form-control"  placeholder="String"name="description">
         </div>
         <div class="form-group">
             <label>Price Per Unit</label>
-            <input type="number" class="form-control" name="price_per_unit">
+            <input type="text" class="form-control" placeholder="Float Value" name="price_per_unit">
         </div>
         <div class="form-group">
             <label>Dose range</label>
-            <input type="text" class="form-control" name="dose_range">
+            <input type="text" class="form-control" placeholder="Comma seperated floats" name="dose_range">
         </div>
         <div class="form-group">
             <label>Times Per Day</label>
-            <input type="number" class="form-control" name="times_per_day">
+            <input type="number" class="form-control" placeholder="Int" name="times_per_day">
         </div>
         <div class="form-group">
             <label>Unit Type</label>
-            <input type="text" class="form-control" name="unit">
+            <input type="text" class="form-control" placeholder="Ex: mg" name="units">
         </div>
 
 
@@ -51,3 +45,4 @@
     </form>
 
 </div>
+</body>

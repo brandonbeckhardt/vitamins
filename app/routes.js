@@ -6,21 +6,25 @@ var mongoose = require('mongoose');
 module.exports = function(app, passport) {
 // serve index and view partials
 app.get('/', function(req, res){
-  db.query("select * from vitamins, dosages where vitamins.id = v_id;")
-    .then(function (data) {
-        var templateData = {"title":"Vitamins", "vitamins":data};
-        res.render('index.ejs', templateData, function(err, html) {
-          res.send(html);
-        });
-    }).catch(function (error) {
-        console.log("ERROR:", error);
+    var Vitamin = require("./models/vitamin");
+    Vitamin.find({}, function(err, vitamins) {
+        var build_vitamin_info = null;
+        if (req.session.build_vitamin_info){
+            build_vitamin_info = req.session.build_vitamin_info;
+            req.session.build_vitamin_info = null;
+        }
+        var info = {data :{"title":"Vitamins", "vitamins":vitamins, "build_vitamin_info": build_vitamin_info}};
+        res.render('index.ejs', info);
     });
 });
-
 app.get('/login', function(req, res){
-    res.render('login.ejs');
+    res.render('login.ejs', {message:req.flash('login_first')});
 });
-
+ app.post('/login', passport.authenticate('local-login', {
+        successRedirect : '/profile', // redirect to the secure profile section
+        failureRedirect : '/login', // redirect back to the signup page if there is an error
+        failureFlash : true // allow flash messages
+    }));
 
  // process the signup form
 app.post('/signup', passport.authenticate('local-signup', {
@@ -29,30 +33,149 @@ app.post('/signup', passport.authenticate('local-signup', {
         failureFlash : true // allow flash messages
     }));
  app.get('/signup', function(req, res) {
-        // render the page and pass in any flash data if it exists
         res.render('signup.ejs', { message: req.flash('signupMessage') });
 });
+ app.get('/add_address', function(req,res){
+    if (!req.user){
+        req.session.redirect_to_add_address = true;
+        req.flash("login_first", "You must login before continuing.");
+        res.redirect('/login');
+    } else {
+        res.render('add_address.ejs');
+    }
+ });
+
+app.post('/add_address', function(req,res){
+    form_address = req.body;
+    Address = require("./models/address");
+    address = new Address();
+    address.street = form_address.street;
+    address.country = form_address.country;
+    address.state = form_address.state;
+    address.zip_code = form_address.zip_code;
+    address.city = form_address.city;
+    address.user_id = req.user.id;
+    address.save(function(err,address){
+        if (err) throw err;
+        console.log('Saved!');
+        req.flash("profile_message", "Address Added!");
+        res.redirect('/profile');
+    });
+});
+
+app.get('/cart', function(req, res){
+
+     if (!req.user){
+        req.session.redirect_to_cart = true;
+        req.flash("login_first", "You must login before continuing.");
+        res.redirect('/login');
+    } else {
+        var Custom_Vitamins = require('./models/custom_vitamin');
+        Custom_Vitamins.find({'user_id':req.user.id},function(err, custom_vitamins){
+            var Vitamins = require('./models/vitamin');
+            Vitamins.find(function(err, vitamins){
+                if (err) throw err;
+                var vitamin_map = {};
+                vitamins.forEach(function(vitamin){
+                    vitamin_map[vitamin._id] = vitamin.name;
+                });
+                 res.render('cart.ejs', {'vitamin_info': {'custom_vitamins':custom_vitamins,'vitamin_map':vitamin_map}, message:req.flash('cart_message')});
+                })
+            });
+    }    
+});
+
+// Create Custom_Vitamin
+app.post('/add_to_cart',function(req, res){
+
+    // If only one vitamin, make format for inputs as array of elements instead of one element
+    var form_vitamin = req.body;
+    form_vitamin.dosage = [].concat(form_vitamin.dosage);
+    form_vitamin.price = [].concat(form_vitamin.price);
+    form_vitamin.vitamin_id =  [].concat(form_vitamin.vitamin_id);
+    if (!req.user){
+        req.session.redirect_to_build_vitamin = true;
+        req.session.build_vitamin_info = form_vitamin;
+        req.flash("login_first", "You must login before continuing.");
+        res.redirect('/login');
+    } else {
+        Custom_Vitamin = require('./models/custom_vitamin');
+        vitamin = new Custom_Vitamin();
+        vitamin.number_of_pills = 0; //Need to add on page!
+        vitamin.times_per_day = form_vitamin.times_per_day;
+        vitamin.dosage = form_vitamin.dosage;
+        vitamin.vitamin_id = form_vitamin.vitamin_id;
+        vitamin.price = form_vitamin.price;
+        vitamin.number_of_pills = form_vitamin.number_of_pills;
+        vitamin.user_id = req.user._id;
+        vitamin.status = "cart";
+        vitamin.price = form_vitamin.total_price;
+        vitamin.save(function(err,vitamin){
+            if (err) throw err;
+            console.log('Saved!');
+            req.flash("cart_message", "Your Custom Vitamin has been added to your cart!");
+            res.redirect('/cart');
+        });
+    }
+});
+
+app.post('/handle_cart', function(req, res){
+    var CustomVitamins = require("./models/custom_vitamin");
+    if (req.body.save_for_later || req.body.add_to_cart){
+        if (req.body.save_for_later){
+            var custom_vitamin_id = req.body.save_for_later;
+        } else {
+            var custom_vitamin_id = req.body.add_to_cart;
+        }
+        CustomVitamins.findOne({"_id":custom_vitamin_id}, function(err, custom_vitamin) {
+            if (err) throw err;
+            if (req.body.save_for_later){
+                custom_vitamin.status="save_for_later";
+            } else {
+                custom_vitamin.status="cart";
+            }
+            custom_vitamin.save(function(err, custom_vitamin){
+                if (req.body.save_for_later){
+                    req.flash("cart_message","Your custom vitamin has been saved for later");
+                } else {
+                    req.flash("cart_message","Your custom vitamin has been added to the cart");
+                }
+                res.redirect('/cart');
+            });
+        });
+    } else if (req.body.delete){
+        CustomVitamins.remove({"_id":req.body.delete}, function(err){
+            if (err) throw err;
+            req.flash("cart_message","Your custom vitamin has been removed.");
+            res.redirect('/cart');
+        });
+    } else{
+        res.redirect('/cart');
+    }
+});
+
+
+
+
 
 app.get('/create_vitamin', function(req, res){
-    res.render('create_vitamin.ejs',{ message: req.flash('vitamin_created_message') });
+    res.render('create_vitamin.ejs', {message: req.flash('vitamin_created_message') });
 });
 app.post('/create_vitamin', function(req, res){
     // Note there is no authentication
     form_vitamin = req.body;
-    console.log(form_vitamin);
     Vitamin = require("./models/vitamin");
     vitamin = new Vitamin();
     vitamin.name = form_vitamin.name;
     vitamin.description = form_vitamin.description;
-    vitamin.price_per_unit = form_vitamin.price_per_unit;
+    vitamin.price_per_unit = parseFloat(form_vitamin.price_per_unit);
     vitamin.dose_range = form_vitamin.dose_range.split(',').map(parseFloat);
-    // console.log(;
+    vitamin.times_per_day =form_vitamin.times_per_day;
     vitamin.units = form_vitamin.units;
-    console.log(vitamin);
-    vitamin.save(function(err, newVitamin){
+    vitamin.save(function(err, vitamin){
         if (err) throw err;
         console.log('Saved!');
-         req.flash("vitamin_created_message", "Vitamin Created");
+        req.flash("vitamin_created_message", "Vitamin Created");
         res.redirect('/create_vitamin');
     });
    
@@ -64,11 +187,23 @@ app.post('/create_vitamin', function(req, res){
 // we will want this protected so you have to be logged in to visit
 // we will use route middleware to verify this (the isLoggedIn function)
 app.get('/profile', isLoggedIn, function(req, res) {
-    res.render('profile.ejs', {
-        user : req.user // get the user out of session and pass to template
-    });
+    // If we were at Add Address page before, redirect back to it
+    if (req.session.redirect_to_add_address){
+        req.session.redirect_to_add_address = false;
+        res.redirect('/add_address');
+    } else if(req.session.redirect_to_build_vitamin)  { 
+        req.session.redirect_to_build_vitamin = false;
+        res.redirect('/');
+    } else if ( req.session.redirect_to_cart){
+        req.session.redirect_to_cart = false;
+        res.redirect('/cart');
+    } else{
+        res.render('profile.ejs', {
+            user : req.user,// get the user out of session and pass to template
+            message: req.flash('profile_message')
+        });
+    }
 });
-
 
 app.post('/confirmation',function(req, res){
     var orderData = []
@@ -77,9 +212,7 @@ app.post('/confirmation',function(req, res){
             var vitamin = req.body.vitamin_name;
             var vitamin_id = req.body.vitamin_id;
             var dosage = req.body.dosage;
-
             var times_per_day = req.body.times_per_day;
-            console.log(times_per_day);
             var price = req.body.price;
             orderData.push({'vitamin': vitamin, 'vitamin_id': vitamin_id,'dosage':dosage,'times_per_day':times_per_day, 'price':price, });
     } else {
@@ -94,19 +227,11 @@ app.post('/confirmation',function(req, res){
     }
     var total_price = req.body.total_price;
 
-    // temp hack for user and address
-    db.query('select *, addresses.id as address_id from users, addresses where users.id = user_id and users.id = 1;')
-    .then(function(userAddressdata){
-        if (userAddressdata.length > 1){
-            userAddressdata = userAddressdata[0]
-        }
-        {data = {'vitamin_info':orderData, 'total_price':total_price, 'user_address_info':userAddressdata}}
+    // Need to get user and address. Have to add address into table
+        {data = {'vitamin_info':orderData, 'total_price':total_price, 'user_address_info':null}}
         res.render('confirmation_page.ejs', data, function(err, html) {
             res.send(html);
          });
-    }).catch(function (error) {
-        console.log("ERROR:", error);
-    });
 });
 
 
