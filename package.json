@@ -2,28 +2,25 @@
   "name": "vitamins_repo",
   "version": "0.0.0",
   "private": true,
-  "main":"server.js",
+  "main": "server.js",
   "dependencies": {
-    "bcrypt-nodejs" : "latest",
-    "connect-flash" : "~0.1.1", 
-    
+    "bcrypt-nodejs": "latest",
+    "body-parser": "~1.0.0",
+    "connect-flash": "~0.1.1",
     "cookie-parser": "~1.3.5",
     "debug": "~2.2.0",
+    "ejs": "latest",
     "express": "~4.13.1",
+    "express-ejs-layouts": "latest",
+    "express-session": "~1.0.0",
+    "http": "latest",
     "jade": "~1.11.0",
+    "method-override": "~1.0.0",
     "mongoose": "latest",
     "morgan": "~1.6.1",
+    "passport": "~0.1.17",
     "passport-local": "^1.0.0",
-    "passport" : "~0.1.17", 
-    "serve-favicon": "~2.3.0",
-      
-    "body-parser": "~1.0.0",
-    "method-override": "~1.0.0",
-    "express-session": "~1.0.0" ,
-
-    "http":"latest",
-    "path":"latest",
-    "express-ejs-layouts":"latest",
-    "ejs":"latest"
+    "path": "latest",
+    "serve-favicon": "~2.3.0"
   }
 }
