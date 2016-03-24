@@ -104,6 +104,36 @@ angular_app.controller('CartController', function($scope, $attrs, $http) {
 		console.log($scope.cart);
 	}
 });
+angular_app.controller('CheckoutController', function($scope, $attrs, $http) {
+	$scope.init = function(data){	
+		data = JSON.parse(data);
+		$scope.custom_vitamins = data.custom_vitamins;
+		$scope.vitamin_map = data.vitamin_map;
+		$scope.addresses = data.addresses;
+		if ($scope.addresses.length > 0){
+			$scope.current_address = $scope.addresses[0]; //Hacky, would eventually like to make a default
+		}
+		$scope.changing_address = false;
+	}
+	$scope.change_address = function(input){
+		if (input == 'show'){
+			$scope.changing_address = true;
+			$scope.old_address = $scope.current_address;
+			$scope.current_address = null;
+		} else if (input == 'save'){
+			if($scope.temp_address){
+				$scope.current_address = $scope.temp_address;
+			} else {
+				$scope.current_address = $scope.old_address;
+			}
+			
+			$scope.changing_address = false;
+		} else if (input =='cancel'){
+			$scope.current_address = $scope.old_address;
+			$scope.changing_address = false;
+		}
+	}
+});
 angular_app.controller('ConfirmationController', function($scope) {
 	$scope.init = function(data){
 		$scope.data = JSON.parse(data)

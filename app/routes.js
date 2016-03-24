@@ -42,6 +42,7 @@ app.post('/signup', passport.authenticate('local-signup', {
         req.flash("login_first", "You must login before continuing.");
         res.redirect('/login');
     } else {
+        if (req.query.redirect_to_checkout) req.session.redirect_to_checkout = true;
         res.render('add_address.ejs');
     }
  });
@@ -60,12 +61,17 @@ app.post('/add_address', function(req,res){
         if (err) throw err;
         console.log('Saved!');
         req.flash("profile_message", "Address Added!");
-        res.redirect('/profile');
+        if(req.session.redirect_to_checkout){
+            req.session.redirect_to_checkout = false;
+            res.redirect('/checkout');
+        } else{
+            res.redirect('/profile');
+        }
+        
     });
 });
 
 app.get('/cart', function(req, res){
-
      if (!req.user){
         req.session.redirect_to_cart = true;
         req.flash("login_first", "You must login before continuing.");
@@ -150,14 +156,38 @@ app.post('/handle_cart', function(req, res){
             req.flash("cart_message","Your custom vitamin has been removed.");
             res.redirect('/cart');
         });
-    } else{
+    } else if (req.body.checkout){
+        res.redirect('/checkout');
+    } else {
         res.redirect('/cart');
     }
 });
 
-
-
-
+app.get('/checkout', function(req,res){
+     if (!req.user){
+        req.session.redirect_to_cart = true;
+        req.flash("login_first", "You must login before continuing.");
+        res.redirect('/login');
+    } else {
+        var Custom_Vitamins = require('./models/custom_vitamin');
+        Custom_Vitamins.find({'user_id':req.user.id, 'status':'cart'},function(err, custom_vitamins){
+            var Vitamins = require('./models/vitamin');
+            Vitamins.find(function(err, vitamins){
+                if (err) throw err;
+                var vitamin_map = {};
+                vitamins.forEach(function(vitamin){
+                    vitamin_map[vitamin._id] = vitamin.name;
+                });
+                var Addresses = require('./models/address');
+                Addresses.find({'user_id':req.user.id}, function(err, addresses){
+                    if (err) throw err;
+                    console.log({'info': {'custom_vitamins':custom_vitamins,'vitamin_map':vitamin_map, 'addresses':addresses}, message:req.flash('checkout_message')});
+                    res.render('checkout.ejs', {'info': {'custom_vitamins':custom_vitamins,'vitamin_map':vitamin_map, 'addresses':addresses}, message:req.flash('checkout_message')});
+                });     
+            });
+        });
+    }   
+});
 
 app.get('/create_vitamin', function(req, res){
     res.render('create_vitamin.ejs', {message: req.flash('vitamin_created_message') });
