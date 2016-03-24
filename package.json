@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node ./bin/www"
   },
+  "main":"server.js",
   "dependencies": {
     "bcrypt-nodejs" : "latest",
     "connect-flash" : "~0.1.1", 
