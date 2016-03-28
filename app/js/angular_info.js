@@ -4,12 +4,11 @@ angular_app.controller('VitaminsController', function($scope, $attrs) {
 		data = JSON.parse(data);
 		$scope.vitamins = data.vitamins;
 		$scope.build_vitamin_info = data.build_vitamin_info;
-		// console.log($scope.build_vitamin_info);
-		console.log($scope.vitamins);
 		$scope.selected_vitamins = [];
 		$scope.dose_amount = 0;
 		$scope.num_times_per_day = 0;
 		$scope.MakeTimePerDayRanges();
+
 
 		// If we need to recreate the filled out form info, goes here!
 		if (data.build_vitamin_info != null){

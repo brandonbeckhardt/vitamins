@@ -8,10 +8,11 @@
 	<div class="form-group">
 		<div class="row">
 			<div class="main_wrapper">
-				<div class = 'col-md-4'>
+		
 				  	<div class ="generic_wrapper">
-				  		<div class="checkbox_wrapper">
-						<select name="times_per_day" class="form-control" ng-model="times_per_day" ng-options="tpd as tpd for tpd in max_tpd_range track by tpd" required>
+				  	<h2>Create your Vitamin!</h2>
+				  		<div class="vitamin_form_input">
+						<select name="times_per_day" class="form-control drop_down" ng-model="times_per_day" ng-options="tpd as tpd for tpd in max_tpd_range track by tpd" required>
 							<option value="">Select Times Per Day </option> 
 						 </select>
 						 <span ng-show="vitamin_form.times_per_day.$error.required">The Timers Per Day is required.</span>
@@ -23,8 +24,7 @@
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class = 'col-md-8'>
+
 					<div class="generic_wrapper">
 						<table class = "vitamins_table">
 							<tr>
@@ -48,9 +48,9 @@
 								</td>
 								<td pricing>
 									<div name="vit_price" class="form-control pricing">
-									{{(vitamin.dose_amount * vitamin.price_per_unit).toFixed( 2 )}} ({{vitamin.price_per_unit}}/{{vitamin.units}})
+									{{((vitamin.dose_amount || 0) * vitamin.price_per_unit).toFixed( 2 )}} ({{vitamin.price_per_unit}}/{{vitamin.units}})
 		      						</div>
-		      						<input type="hidden" name="price" value="{{(vitamin.dose_amount * vitamin.price_per_unit).toFixed( 2 )}}">
+		      						<input type="hidden" name="price" value="{{((vitamin.dose_amount || 0)  * vitamin.price_per_unit).toFixed( 2 )}}">
 								</td>
 								<td>
 									<button class="form-control" ng-click="AddOrRemoveVitamin(vitamin)">X</button>
@@ -62,14 +62,16 @@
 								<input type="hidden" name="total_price" value="{{CalculateTotalPrice()}}">
 							</tr>
 						</table>
-						<label>Number of pills</label><input type="number" ng-model="number_of_pills" name="number_of_pills" min="20">
-						
-					</div>
+						<div class="vitamin_form_input">
+							<label>Number of pills</label><input type="number" ng-model="number_of_pills" name="number_of_pills" min="20">
+						</div>
+
 				</div>
 			</div>	
 		</div>
+			<input type="submit" value="Add To Cart" class="form-control submit_button">
 	</div>
-	<input type="submit" value="Add To Cart" class="form-control submit_button">
+
 </form>
 </div>
 </body>
