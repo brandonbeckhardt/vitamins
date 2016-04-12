@@ -7,39 +7,36 @@ module.exports = function(app, passport) {
 
 // serve index and view partials
 app.get('/', function(req, res){
-    var Vitamin = require("./models/vitamin");
-    Vitamin.find({}, function(err, vitamins) {
-        var build_vitamin_info = null;
-        if (req.session.build_vitamin_info){
-            build_vitamin_info = req.session.build_vitamin_info;
-            req.session.build_vitamin_info = null;
-        }
-        var info = {data :{"title":"Vitamins", "vitamins":vitamins, "build_vitamin_info": build_vitamin_info}};
-        res.render('index.ejs', info);
-    });
+    var build_vitamin_info = null;
+    if (req.session.build_vitamin_info){
+        build_vitamin_info = req.session.build_vitamin_info;
+        req.session.build_vitamin_info = null;
+    }
+    var info = {data :{"title":"Vitamins", "vitamins":global.vitamins, "build_vitamin_info": build_vitamin_info}};
+    res.render('index.ejs', info);
 });
 app.get('/login', function(req, res){
-    res.render('login.ejs', {message:req.flash()});
+    res.render('login.ejs', {message:req.flash('loginMessage')});
 });
-//  app.post('/login', passport.authenticate('local-login', {
-//         successRedirect : '/profile', // redirect to the secure profile section
-//         failureRedirect : '/login', // redirect back to the signup page if there is an error
-//         failureFlash : '' // allow flash messages
-//     }));
+ app.post('/login', passport.authenticate('local-login', {
+        successRedirect : '/profile', // redirect to the secure profile section
+        failureRedirect : '/login', // redirect back to the signup page if there is an error
+        failureFlash : true // allow flash messages
+    }));
 
-//  // process the signup form
-// app.post('/signup', passport.authenticate('local-signup', {
-//         successRedirect : '/profile', // redirect to the secure profile section
-//         failureRedirect : '/signup', // redirect back to the signup page if there is an error
-//         failureFlash : true // allow flash messages
-//     }));
+ // process the signup form
+app.post('/signup', passport.authenticate('local-signup', {
+        successRedirect : '/profile', // redirect to the secure profile section
+        failureRedirect : '/signup', // redirect back to the signup page if there is an error
+        failureFlash : true // allow flash messages
+    }));
  app.get('/signup', function(req, res) {
         res.render('signup.ejs', { message: req.flash('signupMessage') });
 });
  app.get('/add_address', function(req,res){
     if (!req.user){
         req.session.redirect_to_add_address = true;
-        req.flash("login_first", "You must login before continuing.");
+        req.flash("loginMessage", "You must login before continuing.");
         res.redirect('/login');
     } else {
         if (req.query.redirect_to_checkout) req.session.redirect_to_checkout = true;
@@ -74,7 +71,7 @@ app.post('/add_address', function(req,res){
 app.get('/cart', function(req, res){
      if (!req.user){
         req.session.redirect_to_cart = true;
-        req.flash("login_first", "You must login before continuing.");
+        req.flash("loginMessage", "You must login before continuing.");
         res.redirect('/login');
     } else {
         var Custom_Vitamins = require('./models/custom_vitamin');
@@ -98,12 +95,12 @@ app.post('/add_to_cart',function(req, res){
     // If only one vitamin, make format for inputs as array of elements instead of one element
     var form_vitamin = req.body;
     form_vitamin.dosage = [].concat(form_vitamin.dosage);
-    form_vitamin.price = [].concat(form_vitamin.price);
+    form_vitamin.price = form_vitamin.price;
     form_vitamin.vitamin_id =  [].concat(form_vitamin.vitamin_id);
     if (!req.user){
         req.session.redirect_to_build_vitamin = true;
         req.session.build_vitamin_info = form_vitamin;
-        req.flash("login_first", "You must login before continuing.");
+        req.flash("loginMessage", "You must login before continuing.");
         res.redirect('/login');
     } else {
         Custom_Vitamin = require('./models/custom_vitamin');
@@ -166,7 +163,7 @@ app.post('/handle_cart', function(req, res){
 app.get('/checkout', function(req,res){
      if (!req.user){
         req.session.redirect_to_cart = true;
-        req.flash("login_first", "You must login before continuing.");
+        req.flash("loginMessage", "You must login before continuing.");
         res.redirect('/login');
     } else {
         var Custom_Vitamins = require('./models/custom_vitamin');
@@ -205,11 +202,14 @@ app.post('/create_vitamin', function(req, res){
     vitamin.units = form_vitamin.units;
     vitamin.save(function(err, vitamin){
         if (err) throw err;
-        console.log('Saved!');
-        req.flash("vitamin_created_message", "Vitamin Created");
-        res.redirect('/create_vitamin');
+        Vitamin.find({}, function(err, vitamins){
+            if (err) throw err;
+            global.vitamins = vitamins;
+            console.log('Saved!');
+            req.flash("vitamin_created_message", "Vitamin Created");
+            res.redirect('/create_vitamin');
+        }); 
     });
-   
 });
 
  // =====================================
@@ -264,8 +264,6 @@ app.post('/confirmation',function(req, res){
             res.send(html);
          });
 });
-
-
 
 app.post('/submit_order',function(req, res){
     var data = JSON.parse(req.body.order_data);

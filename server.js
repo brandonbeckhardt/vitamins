@@ -58,10 +58,23 @@ app.use(function (req, res, next) {
    next();
 });
 
-
 // Routes
 var routes = require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
+
+global.arrayToMap = function(arr){
+	var result = arr.reduce(function(map, obj) {
+    	map[obj.id] = obj;
+    	return map;
+	}, {});
+	return result;
+}
+// Making global vitamins
+vitamin = require("./app/models/vitamin");
+vitamin.find({}, function(err, vitamins) {
+	// global.vitamins = global.arrayToMap(vitamins);  //currently commented out
+		global.vitamins = vitamins;
+});
 /**************
  * Start Server
  **************/

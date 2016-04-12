@@ -5,7 +5,7 @@ var customVitaminSchema = mongoose.Schema({
   user_id	:{type: mongoose.Schema.Types.ObjectId, ref: 'User'}, 
   vitamin_id  : [{type: mongoose.Schema.Types.ObjectId, ref: 'Vitamin'}], //Array vitamin_ids
   dosage : [Number],
-  price : [Number],
+  price : Number,
   number_of_pills : Number,
   times_per_day : Number,
   status : String //cart, save_for_later, ordered

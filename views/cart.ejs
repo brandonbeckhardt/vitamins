@@ -31,9 +31,7 @@
                     </tr>
                     
                         <tbody ng-repeat="custom_vitamin in cart" class="custom_vitamin_divider">
-                        
                             <tr ng-repeat="vitamin_id in custom_vitamin.vitamin_id" >
-                            
                             <td>{{vitamin_map[vitamin_id]}}</td>
                             <td>{{custom_vitamin.dosage[$index]}}{{}}</td>
                             <td ng-show="{{$last}}">  {{custom_vitamin.number_of_pills}}</td>

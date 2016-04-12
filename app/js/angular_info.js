@@ -9,7 +9,6 @@ angular_app.controller('VitaminsController', function($scope, $attrs) {
 		$scope.num_times_per_day = 0;
 		$scope.MakeTimePerDayRanges();
 
-
 		// If we need to recreate the filled out form info, goes here!
 		if (data.build_vitamin_info != null){
 			form = document.getElementById('vitamin_form');
