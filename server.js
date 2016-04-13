@@ -72,8 +72,8 @@ global.arrayToMap = function(arr){
 // Making global vitamins
 vitamin = require("./app/models/vitamin");
 vitamin.find({}, function(err, vitamins) {
-	// global.vitamins = global.arrayToMap(vitamins);  //currently commented out
-		global.vitamins = vitamins;
+	global.vitamins = global.arrayToMap(vitamins);  //currently commented out
+		// global.vitamins = vitamins;
 });
 /**************
  * Start Server

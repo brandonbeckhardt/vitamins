@@ -3,33 +3,32 @@ angular_app.controller('VitaminsController', function($scope, $attrs) {
 	$scope.init = function(data){
 		data = JSON.parse(data);
 		$scope.vitamins = data.vitamins;
-		$scope.build_vitamin_info = data.build_vitamin_info;
+		// $scope.build_vitamin_info = data.build_vitamin_info;
 		$scope.selected_vitamins = [];
 		$scope.dose_amount = 0;
 		$scope.num_times_per_day = 0;
 		$scope.MakeTimePerDayRanges();
 
 		// If we need to recreate the filled out form info, goes here!
-		if (data.build_vitamin_info != null){
-			form = document.getElementById('vitamin_form');
-			form.elements = data.build_vitamin_info;
-			foundIndex = 0;
-		
-			$scope.times_per_day = data.build_vitamin_info.times_per_day;
-			console.log(data.build_vitamin_info);
-			$scope.number_of_pills = parseFloat(data.build_vitamin_info.number_of_pills);
-			for (vitaminIndex in $scope.vitamins){
-				vitamin = $scope.vitamins[vitaminIndex];
-				if (data.build_vitamin_info.vitamin_id.indexOf(vitamin._id) > -1){
-					$scope.selected_vitamins.push(vitamin);
-					$scope.vitamins[$scope.vitamins.indexOf(vitamin)].Selected=true;
-					$scope.vitamins[$scope.vitamins.indexOf(vitamin)].dose_amount=data.build_vitamin_info.dosage[foundIndex];
-					$scope.vitamins[$scope.vitamins.indexOf(vitamin)].time_per_day=data.build_vitamin_info.times_per_day[foundIndex];
-					$scope.vitamins[$scope.vitamins.indexOf(vitamin)].price=data.build_vitamin_info.price[foundIndex];
-					foundIndex++;
-				}
-			}
-		}
+		// if (data.build_vitamin_info != null){
+		// 	form = document.getElementById('vitamin_form');
+		// 	form.elements = data.build_vitamin_info;
+		// 	foundIndex = 0;
+	
+		// 	$scope.times_per_day = data.build_vitamin_info.times_per_day;
+		// 	$scope.number_of_pills = parseFloat(data.build_vitamin_info.number_of_pills);
+		// 	for (vitaminIndex in $scope.vitamins){
+		// 		vitamin = $scope.vitamins[vitaminIndex];
+		// 		if (data.build_vitamin_info.vitamin_id.indexOf(vitamin._id) > -1){
+		// 			$scope.selected_vitamins.push(vitamin);
+		// 			$scope.vitamins[$scope.vitamins.indexOf(vitamin)].Selected=true;
+		// 			$scope.vitamins[$scope.vitamins.indexOf(vitamin)].dose_amount=data.build_vitamin_info.dosage[foundIndex];
+		// 			$scope.vitamins[$scope.vitamins.indexOf(vitamin)].time_per_day=data.build_vitamin_info.times_per_day[foundIndex];
+		// 			$scope.vitamins[$scope.vitamins.indexOf(vitamin)].price=data.build_vitamin_info.price[foundIndex];
+		// 			foundIndex++;
+		// 		}
+		// 	}
+		// }
 	}
 	$scope.AddOrRemoveVitamin = function(vitamin){
 		var index = $scope.selected_vitamins.indexOf(vitamin);
