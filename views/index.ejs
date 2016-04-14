@@ -1,77 +1,11 @@
 <head>
 	<link rel="stylesheet" href="/css/vitamins_page.css" crossorigin="anonymous">
 </head>
-<body ng-app="app">
-<div  ng-controller="VitaminsController"  ng-init="init('<%= JSON.stringify(data) %>' )">
-
-<form action="/cart" method="GET" id="vitamin_form">
+<body>
 	<div class="form-group">
 		<div class="row">
 			<div class="main_wrapper">
-		
-				  	<div class ="generic_wrapper">
-				  	<h2>Create your Vitamin!</h2>
-				  		<div class="vitamin_form_input">
-						<select name="times_per_day" class="form-control drop_down" ng-model="times_per_day" ng-options="tpd as tpd for tpd in max_tpd_range track by tpd" required>
-							<option value="">Select Times Per Day </option> 
-						 </select>
-						 <span ng-show="vitamin_form.times_per_day.$error.required">The Timers Per Day is required.</span>
-							<div ng-repeat="vitamin in vitamins">
-								<div ng-if="vitamin.times_per_day >=times_per_day || !times_per_day">
-					  			<input type="checkbox" name="{{vitamin.name}}" ng-click="AddOrRemoveVitamin(vitamin)" ng-model="vitamin.Selected" >
-					  			<label class="control-label">{{vitamin.name}}  </label>
-					  			</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="generic_wrapper">
-						<table class = "vitamins_table">
-							<tr>
-								<th>Vitamin </th>
-								<th> Dosage </th>
-								<th> Price </th>
-								<th></th>
-							</tr>
-							<tr ng-repeat="vitamin in selected_vitamins" ng-if="vitamin.times_per_day >=times_per_day || !times_per_day">
-								<td>{{vitamin.name}}</td>
-
-								<input type="hidden" name="vitamin_name" value="{{vitamin.name}}" >
-								<input type="hidden" name="vitamin_id" value="{{vitamin._id}}" >
-								<td> 
-
-									 <select name="dosage" class="form-control" ng-model="vitamin.dose_amount" ng-options="item as item for item in vitamin.dose_range track by item" required>
-		      						<!-- add unit -->
-		      							<option value="">Select Dosage</option> 
-		   							 </select>
-		   							 <span ng-show="vitamin_form.dosage.$error.required">Please Select Dosage.</span>
-								</td>
-								<td pricing>
-									<div name="vit_price" class="form-control pricing">
-									{{((vitamin.dose_amount || 0) * vitamin.price_per_unit).toFixed( 2 )}} ({{vitamin.price_per_unit}}/{{vitamin.units}})
-		      						</div>
-		      						<input type="hidden" name="price" value="{{((vitamin.dose_amount || 0)  * vitamin.price_per_unit).toFixed( 2 )}}">
-								</td>
-								<td>
-									<button class="form-control" ng-click="AddOrRemoveVitamin(vitamin)">X</button>
-								</td>
-							<tr>
-							<tr>
-								<td>Total Price:</td>	
-								<td>{{CalculateTotalPrice()}}</td>	
-								<input type="hidden" name="total_price" value="{{CalculateTotalPrice()}}">
-							</tr>
-						</table>
-						<div class="vitamin_form_input">
-							<label>Number of pills</label><input type="number" ng-model="number_of_pills" name="number_of_pills" min="20">
-						</div>
-
-				</div>
-			</div>	
+			</div>
 		</div>
-			<input type="submit" value="Add To Cart" class="form-control submit_button">
 	</div>
-
-</form>
-</div>
 </body>

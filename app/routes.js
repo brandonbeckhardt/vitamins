@@ -5,10 +5,18 @@ var mongoose = require('mongoose');
  // app/routes.js
 module.exports = function(app, passport) {
 
-// serve index and view partials
+
+
 app.get('/', function(req, res){
+    res.render('index.ejs', {message:req.flash('loginMessage')});
+});
+
+
+
+// serve index and view partials
+app.get('/custom_vitamin', function(req, res){
     var info = {data :{"title":"Vitamins", "vitamins":global.vitamins}};
-    res.render('index.ejs', info);
+    res.render('custom_vitamin_creation.ejs', info);
 });
 app.get('/login', function(req, res){
     res.render('login.ejs', {message:req.flash('loginMessage')});
