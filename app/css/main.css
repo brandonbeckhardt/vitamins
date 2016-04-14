@@ -1,6 +1,8 @@
-.checkbox_wrapper{
-	margin-left: 35%;
-	width: 70%;
+body{
+	font-family: 'Ubuntu', sans-serif;
+}
+label{
+	margin-right: 10px;
 }
 .selected_vitamins_wrapper{
 
@@ -22,17 +24,24 @@
 	margin-right: auto;
 }
 .generic_wrapper{
-	padding: 9px 14px;
+	padding: 35px 50px;
     margin-bottom: 14px;
     background-color: #f7f7f9;
     border: 1px solid #e1e1e8;
     border-radius: 4px;
     width: 100%;
 }
+.drop_down{
+	width: 30%;
+}
 /*Vitamin form page*/
 .vitamin_form_wrapper{
 	width: 35%;
 	float: right;
+}
+.vitamin_form_input{
+	margin: 5% 10%;
+	width: 70%;
 }
 /*New user page*/
 .new_user_form{
@@ -43,9 +52,10 @@
 	margin: 15px;
 }
 .submit_button{
-	width: 120px;
-	margin-right: auto;
-	margin-left: auto;
+	width: 150px;
+	margin: 20px 140px 100px 20px;
+	float: right;
+
 }
 .specific_page_header{
 	font-size: 20pt;
