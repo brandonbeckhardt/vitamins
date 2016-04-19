@@ -101,22 +101,20 @@ app.get('/cart',function(req, res){
             vitamin.times_per_day = form_vitamin.times_per_day;
             vitamin.dosage = form_vitamin.dosage;
             vitamin.vitamin_id = form_vitamin.vitamin_id;
-            vitamin.price = form_vitamin.price;
             vitamin.number_of_pills = form_vitamin.number_of_pills;
             vitamin.user_id = req.user._id;
             vitamin.status = "cart";
-            vitamin.price = form_vitamin.total_price;
             vitamin.save(function(err,vitamin){
                 if (err) throw err;
                 console.log('Saved!');
                 req.flash("cart_message", "Your Custom Vitamin has been added to your cart!");
                 Custom_Vitamins.find({'user_id':req.user.id},function(err, custom_vitamins){
-                    res.render('cart.ejs', {'vitamin_info': {'custom_vitamins':custom_vitamins,'vitamin_map':global.vitamins}, message:req.flash('cart_message')});
+                    res.render('cart.ejs', {'vitamin_info': {'custom_vitamins':custom_vitamins,'vitamins':global.vitamins}, message:req.flash('cart_message')});
                 });
             });
         } else {
             Custom_Vitamins.find({'user_id':req.user.id},function(err, custom_vitamins){
-                    res.render('cart.ejs', {'vitamin_info': {'custom_vitamins':custom_vitamins,'vitamin_map':global.vitamins}, message:req.flash('cart_message')});
+                    res.render('cart.ejs', {'vitamin_info': {'custom_vitamins':custom_vitamins,'vitamins':global.vitamins}, message:req.flash('cart_message')});
                 });
         }
     }
@@ -171,7 +169,7 @@ app.get('/checkout', function(req,res){
             var Addresses = require('./models/address');
             Addresses.find({'user_id':req.user.id}, function(err, addresses){
                 if (err) throw err;
-                res.render('checkout.ejs', {'info': {'custom_vitamins':custom_vitamins,'vitamin_map':global.vitamins, 'addresses':addresses}, message:req.flash('checkout_message')});
+                res.render('checkout.ejs', {'info': {'custom_vitamins':custom_vitamins,'vitamins':global.vitamins, 'addresses':addresses}, message:req.flash('checkout_message')});
             });     
 
         });

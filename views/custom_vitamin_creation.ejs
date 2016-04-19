@@ -15,11 +15,11 @@
 						<select name="times_per_day" class="form-control drop_down" ng-model="times_per_day" ng-options="tpd as tpd for tpd in max_tpd_range track by tpd" required>
 							<option value="">Select Times Per Day </option> 
 						 </select>
-						 <span ng-show="vitamin_form.times_per_day.$error.required">The Timers Per Day is required.</span>
+						 <span ng-show="vitamin_form.times_per_day.$error.required">The Number of Times Per Day is required.</span>
 							<div ng-repeat="vitamin in vitamins">
 								<div ng-if="vitamin.times_per_day >=times_per_day || !times_per_day">
-					  			<input type="checkbox" name="{{vitamin.name}}" ng-click="AddOrRemoveVitamin(vitamin)" ng-model="vitamin.Selected" >
-					  			<label class="control-label">{{vitamin.name}}  </label>
+						  			<input type="checkbox" name="{{vitamin.name}}" ng-click="AddOrRemoveVitamin(vitamin)" ng-model="vitamin.Selected" >
+						  			<label class="control-label">{{vitamin.name}}  </label>
 					  			</div>
 							</div>
 						</div>
@@ -56,15 +56,14 @@
 									<button class="form-control" ng-click="AddOrRemoveVitamin(vitamin)">X</button>
 								</td>
 							<tr>
-							<tr>
-								<td>Total Price:</td>	
-								<td>{{CalculateTotalPrice()}}</td>	
-								<input type="hidden" name="total_price" value="{{CalculateTotalPrice()}}">
-							</tr>
 						</table>
 						<div class="vitamin_form_input">
 							<label>Number of pills</label><input type="number" ng-model="number_of_pills" name="number_of_pills" min="20">
 						</div>
+						<div class="vitamin_form_input">
+							<label>Total Price:</label>{{custom_vitamin_price()}}
+						</div>
+							</tr>
 
 				</div>
 			</div>	
