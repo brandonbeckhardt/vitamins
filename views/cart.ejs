@@ -1,6 +1,5 @@
 <!-- views/profile.ejs -->
 <head>
-    <link rel="stylesheet" href="/css/vitamins_page.css" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/cart.css" crossorigin="anonymous">
 </head>
 <body ng-app="app">
@@ -17,7 +16,7 @@
 
     <div class="row">
         <!-- LOCAL INFORMATION -->
-        <div class="col-sm-6">
+        <div class="col-sm-12">
             <form method="post" action="/handle_cart">
             <div class="well">
                 <h3>Cart</h3>
@@ -32,7 +31,8 @@
                     <tbody ng-repeat="custom_vitamin in cart" class="custom_vitamin_divider">
 
                         <tr ng-repeat="vitamin_id in custom_vitamin.vitamin_id" >
-                            <td>{{vitamins[vitamin_id].name}}</td>
+                            <td>{{custom_vitamin.vitamin_names[$index]}}</td>
+
                             <td>{{custom_vitamin.dosage[$index]}}{{}}</td>
                             <td ng-show="{{$last}}">  {{custom_vitamin.number_of_pills}}</td>
                             <td ng-show="{{$last}}"> {{custom_vitamin.calculated_price}}</td>

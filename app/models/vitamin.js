@@ -10,3 +10,7 @@ var vitaminSchema = mongoose.Schema({
 });
 
 module.exports  = mongoose.model('Vitamin', vitaminSchema);
+
+vitaminSchema.statics.getVitaminById = function(id) {
+ 	return this.model('Vitamin').find({ id: id});
+};

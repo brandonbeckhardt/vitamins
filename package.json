@@ -21,10 +21,7 @@
     "passport": "~0.1.17",
     "passport-local": "^1.0.0",
     "path": "latest",
-<<<<<<< HEAD
-=======
     "request": "^2.71.0",
->>>>>>> ArrayOfMapToMap
     "serve-favicon": "~2.3.0"
   }
 }

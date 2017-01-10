@@ -1,5 +1,15 @@
 var angular_app = angular.module('app', []);
 
+var getObjectById = function(array, id){
+	for (obj_idx in array){
+		if (array[obj_idx]._id === id) 
+			return array[obj_idx];
+	}
+	return null;
+}
+
+
+
 angular_app.factory('myService', function(){
 	return{
 		CalculatePrice: function(prices, number_of_pills){
@@ -83,13 +93,17 @@ angular_app.controller('CartController', function($scope, $attrs, $http, myServi
 		$scope.cart = [];
 		$scope.save_for_later = [];
 		$scope.total_price = 0;
+		console.log(custom_vitamins);
 		for (index in custom_vitamins){
 			custom_vitamin = custom_vitamins[index];
+			custom_vitamin.vitamin_names = [];
 			prices = [];
 			for (id_index in custom_vitamin.vitamin_id){
-				vitamin = $scope.vitamins[custom_vitamin.vitamin_id[id_index]];
-				dosage = custom_vitamin.dosage[id_index];
-				prices.push(vitamin.price_per_unit * dosage);
+				// vitamin = $scope.vitamins[custom_vitamin.vitamin_id[id_index]];
+				price_per_unit = 0
+				vitamin = getObjectById($scope.vitamins, custom_vitamin.vitamin_id[id_index]);
+				custom_vitamin.vitamin_names.push(vitamin.name);
+				prices.push(vitamin.price_per_unit * custom_vitamin.dosage[id_index]);
 			}
 			custom_vitamin.calculated_price = myService.CalculatePrice(prices, custom_vitamin.number_of_pills);
 			if (custom_vitamin.status == "cart"){
