@@ -27,7 +27,7 @@ angular_app.factory('myService', function(){
 angular_app.controller('VitaminsController', function($scope, $attrs, myService) {
 	$scope.init = function(data){
 		data = JSON.parse(data);
-		$scope.vitamins = data.vitamins;
+		$scope.vitamins = Object.values(data.vitamins);
 		// $scope.build_vitamin_info = data.build_vitamin_info;
 		$scope.selected_vitamins = [];
 		$scope.dose_amount = 0;
@@ -91,7 +91,6 @@ angular_app.controller('CartController', function($scope, $attrs, $http, myServi
 		$scope.cart = [];
 		$scope.save_for_later = [];
 		$scope.total_price = 0;
-		console.log(custom_vitamins);
 		for (index in custom_vitamins){
 			custom_vitamin = custom_vitamins[index];
 			custom_vitamin.vitamin_names = [];
