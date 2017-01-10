@@ -1,14 +1,5 @@
 var angular_app = angular.module('app', []);
 
-var getObjectById = function(array, id){
-	for (obj_idx in array){
-		if (array[obj_idx]._id === id) 
-			return array[obj_idx];
-	}
-	return null;
-}
-
-
 
 angular_app.factory('myService', function(){
 	return{
@@ -22,6 +13,13 @@ angular_app.factory('myService', function(){
 	    	}
 	        price = price * number_of_pills;
 			return price.toFixed(2);
+		},
+		GetObjectById: function(array, id){
+			for (obj_idx in array){
+				if (array[obj_idx]._id === id) 
+					return array[obj_idx];
+			}
+			return null;
 		}
 	};
 });
@@ -101,7 +99,7 @@ angular_app.controller('CartController', function($scope, $attrs, $http, myServi
 			for (id_index in custom_vitamin.vitamin_id){
 				// vitamin = $scope.vitamins[custom_vitamin.vitamin_id[id_index]];
 				price_per_unit = 0
-				vitamin = getObjectById($scope.vitamins, custom_vitamin.vitamin_id[id_index]);
+				vitamin = myService.GetObjectById($scope.vitamins, custom_vitamin.vitamin_id[id_index]);
 				custom_vitamin.vitamin_names.push(vitamin.name);
 				prices.push(vitamin.price_per_unit * custom_vitamin.dosage[id_index]);
 			}
