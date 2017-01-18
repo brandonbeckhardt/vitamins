@@ -8,26 +8,39 @@
 			<div class="form-group">
 				<div class="row">
 					<div class="main_wrapper">
-
 						<div class ="generic_wrapper">
 							<h2>Create your Vitamin!</h2>
-							<div class="vitamin_form_input">
-								<div ng-repeat="vitamin in vitamins">
-										<input type="checkbox" name="{{vitamin.name}}" ng-click="AddOrRemoveVitamin(vitamin)" ng-model="vitamin.Selected" >
-										<label class="control-label">{{vitamin.name}}  </label>
-								</div>
+							<div class="vitamin_form_input ">
+								<table class= "left_aligned_table generic_table cart_table table table-hover">
+									<tr>
+										<th></th>
+										<th ><label>Vitamin </label></th>
+										<th > <label>Description</label> </th>
+									</tr>
+									<tbody ng-repeat="vitamin in vitamins">
+										<tr>
+										<td class="table_checkbox"> <input type="checkbox" name="{{vitamin.name}}" ng-click="AddOrRemoveVitamin(vitamin)" ng-model="vitamin.Selected" ></td>
+										<td>{{vitamin.name}}</td>
+										<td>{{vitamin.description}}</td>
+										</tr>
+									</tbody> 
+						
+								</table>
+
 							</div>
 						</div>
-
 						<div class="generic_wrapper">
-							<table class = "vitamins_table">
+									<div class="vitamin_form_input ">
+
+								<table class = "left_aligned_table generic_table cart_table table table-hover">
 								<tr>
 									<th>Vitamin </th>
 									<th> Dosage </th>
 									<th> Price </th>
 									<th></th>
 								</tr>
-								<tr ng-repeat="vitamin in selected_vitamins" ng-if="vitamin.times_per_day >=times_per_day || !times_per_day">
+								<tbody ng-repeat="vitamin in selected_vitamins" >
+									<tr>
 									<td>{{vitamin.name}}</td>
 
 									<input type="hidden" name="vitamin_name" value="{{vitamin.name}}" >
@@ -51,25 +64,27 @@
 									</td>
 									<tr>
 									</table>
+								</div>
 									<div class="vitamin_form_input inline">
 										<label>Number of times per day</label><select name="times_per_day" class="form-control drop_down same_line" ng-model="times_per_day" ng-options="tpd as tpd for tpd in max_tpd_range track by tpd" 
 										ng-init="times_per_day = max_tpd_range[0]"required>
-										</select>
-									</div>
-									<div class="vitamin_form_input">
-										<label>Number of pills</label><input type="number" ng-model="number_of_pills" name="number_of_pills" min="20">
-									</div>
-									<div class="vitamin_form_input">
-										<label>Total Price:</label>{{custom_vitamin_price()}}
-									</div>
-								</tr>
+									</select>
+								</div>
+								<div class="vitamin_form_input">
+									<label>Number of pills</label><input type="number" ng-model="number_of_pills" name="number_of_pills" min="20">
+								</div>
+								<div class="vitamin_form_input">
+									<label>Total Price:</label>{{custom_vitamin_price()}}
+								</div>
+							</tr>
+							</tbody>
 
-							</div>
-						</div>	
-					</div>
-					<input type="submit" value="Add To Cart" class="form-control submit_button">
+						</div>
+					</div>	
 				</div>
+				<input type="submit" value="Add To Cart" class="form-control submit_button">
+			</div>
 
-			</form>
-		</div>
-	</body>
+		</form>
+	</div>
+</body>

@@ -8,7 +8,7 @@ module.exports = function(app, passport) {
 
 
 app.get('/', function(req, res){
-    res.render('index.ejs', {message:req.flash('loginMessage')});
+    res.redirect('/custom_vitamin');
 });
 
 

@@ -9,12 +9,26 @@ label{
 }
 .vitamins_table{
 	width: 100%;
-	margin-bottom: 70pt;
+/*	margin-bottom: 70pt;
+	margin-top: 40pt;*/
+	/*border: 1px dotted #bbc;*/
 }
 .vitamins_table th,td {
 	text-align: center;
 	padding: 5px;
 }
+.vitamins_table th{
+	/*border-bottom: border: 1px dotted #bbc;*/
+}
+.vitamins_table td{
+	border: 1px dotted #bbc;
+}
+.table_wrapper{
+	border:  1px dotted #bbc;
+    margin-bottom: 70pt; 
+    margin-top: 40pt; 
+}
+	
 .pricing{
 	display:block;
 	/*overflow:auto;*/
@@ -45,7 +59,6 @@ label{
 }
 .vitamin_form_input{
 	margin: 1% 1% 0% 3%;
-	width: 70%;
 }
 /*New user page*/
 .new_user_form{
@@ -66,3 +79,35 @@ label{
 	margin-bottom: 10px;
 	margin-bottom: 10px;
 }
+.left_text_align{
+	text-align: left;
+}
+.table_checkbox{
+	width: 10pt;
+	padding-right: 10pt;
+}
+
+.generic_table>tbody>tr>td{
+	border:none;
+}
+.generic_table>tbody>tr>th{
+	border:none;
+	text-align: center;
+}
+.generic_table{
+	border-collapse: collapse;
+	padding: 5px;
+	border: none;	
+}
+.generic_table table>tbody>td>td {
+	border: none;	
+}
+.generic_table th{
+	border: none;
+}
+.left_aligned_table tbody>tr>th,tbody>tr>td {
+	text-align: left;
+}
+
+
+
