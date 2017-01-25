@@ -24,7 +24,7 @@ label{
 	border: 1px dotted #bbc;
 }
 .table_wrapper{
-	border:  1px solid #bbc;
+	border:  1px dotted #bbc;
     margin-bottom: 70pt; 
     margin-top: 40pt; 
 }
@@ -86,3 +86,26 @@ label{
 	width: 10pt;
 	padding-right: 10pt;
 }
+
+.generic_table>tbody>tr>td{
+	border:none;
+}
+.generic_table>tbody>tr>th{
+	border:none;
+	text-align: center;
+}
+.generic_table{
+	border-collapse: collapse;
+	padding: 5px;
+	border: none;	
+}
+.generic_table table>tbody>td>td {
+	border: none;	
+}
+.generic_table th{
+	border: none;
+}
+
+
+
+

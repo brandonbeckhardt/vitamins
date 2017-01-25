@@ -11,9 +11,9 @@
 
 						<div class ="generic_wrapper">
 							<h2>Create your Vitamin!</h2>
-							<div class="vitamin_form_input table_wrapper">
+							<div class="vitamin_form_input ">
 
-								<table class = "vitamins_table">
+								<table class= "table table-bordered table-hover">
 									<tr>
 										<th></th>
 										<th class="left_text_align"><label>Vitamin </label></th>
@@ -31,15 +31,16 @@
 						</div>
 
 						<div class="generic_wrapper">
-							<div class="table_wrapper">
-							<table class = "vitamins_table">
+									<div class="vitamin_form_input ">
+
+								<table class = "table table-bordered table-hover">
 								<tr>
 									<th>Vitamin </th>
 									<th> Dosage </th>
 									<th> Price </th>
 									<th></th>
 								</tr>
-								<tr ng-repeat="vitamin in selected_vitamins" ng-if="vitamin.times_per_day >=times_per_day || !times_per_day">
+								<tr ng-repeat="vitamin in selected_vitamins" >
 									<td>{{vitamin.name}}</td>
 
 									<input type="hidden" name="vitamin_name" value="{{vitamin.name}}" >

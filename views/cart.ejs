@@ -21,24 +21,27 @@
             <div class="well">
                 <h3>Cart</h3>
                 
-                <table class="vitamins_table cart_table">
+                <table class = "generic_table table table-bordered table-hover" >
                     <tr>
                         <th>Vitamin </th>
                         <th> Dosage </th>
                         <th> Quantity </th>
                         <th> Price </th>
+                        <th>  </th>
+                        <th>  </th>
                     </tr>
-                    <tbody ng-repeat="custom_vitamin in cart" class="custom_vitamin_divider">
-
-                        <tr ng-repeat="vitamin_id in custom_vitamin.vitamin_id" >
+                    <tbody ng-repeat="custom_vitamin in cart" class ="generic_table">
+        
+                        <tr ng-repeat="vitamin_id in custom_vitamin.vitamin_id">
                             <td>{{custom_vitamin.vitamin_names[$index]}}</td>
 
-                            <td>{{custom_vitamin.dosage[$index]}}{{}}</td>
+                            <td >{{custom_vitamin.dosage[$index]}}{{}}</td>
                             <td ng-show="{{$last}}">  {{custom_vitamin.number_of_pills}}</td>
                             <td ng-show="{{$last}}"> {{custom_vitamin.calculated_price}}</td>
                             <td ng-show="{{$last}}">  <button type="submit" class="form-control" name="save_for_later"value="{{custom_vitamin._id}}" >Save For Later</button></td>
                             <td ng-show="{{$last}}">  <button type="submit" class="form-control" name="delete" value="{{custom_vitamin._id}}" >X</button></td>
                         </tr>
+
                     </tbody>
                     <tr>
                         <td></td>
@@ -53,12 +56,14 @@
             <button type="submit" class="form-control" name="checkout" value="checkout">Proceed to Checkout</button>
             <div class="well">
                 <h3>Save For Later </h3>
-               <table class="vitamins_table cart_table">
+               <table class = "generic_table table table-bordered table-hover">
                     <tr>
                         <th>Vitamin </th>
                         <th> Dosage </th>
                         <th> Quantity </th>
                         <th> Price </th>
+                        <th></th>
+                        <th></th>
                     </tr>
                     
                         <tbody ng-repeat="custom_vitamin in save_for_later" class="custom_vitamin_divider">

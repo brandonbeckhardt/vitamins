@@ -1,16 +1,18 @@
 
 /*Confirmation Page*/
-.cart_table td{
-	
-	padding: 5px;
+#save_for_later_table td{
+	border: none;
 }
-.cart_table th{
-	padding: 5px;
-}
-tbody.custom_vitamin_divider{
+.custom_vitamin_divider{
 	border-top: 1px dotted black;
-	padding: 10px;
+	/*margin-bottom: 109px;*/
+
+	padding-top: .5em;
+    padding-bottom: .5em;
 }
 .save_for_later{
 	padding:3;
+}
+.test{
+	border-top: 1px solid black;
 }
