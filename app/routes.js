@@ -85,10 +85,15 @@ module.exports = function(app, passport) {
 
     //--------------------------------Cart------------------------------------------------
     app.get('/cart',function(req, res){
-        var Custom_Vitamins = require('./models/custom_vitamin');
-        Custom_Vitamins.find({'user_id':req.user.id},function(err, custom_vitamins){
-            res.render('cart.ejs', {'vitamin_info': {'custom_vitamins':custom_vitamins,'vitamins':global.vitamins}, message:req.flash('cart_message')});
-        });
+        if (!loggedIn(req)){
+            req.flash("loginMessage", "You must login to access your cart");
+            res.redirect('/login');
+        } else {
+            var Custom_Vitamins = require('./models/custom_vitamin');
+            Custom_Vitamins.find({'user_id':req.user.id},function(err, custom_vitamins){
+                res.render('cart.ejs', {'vitamin_info': {'custom_vitamins':custom_vitamins,'vitamins':global.vitamins}, message:req.flash('cart_message')});
+            });
+        } 
     });
     // Create Custom_Vitamin
     app.post('/cart',function(req, res){

@@ -82,6 +82,9 @@ label{
 .left_text_align{
 	text-align: left;
 }
+.right_text_align{
+	text-align:right;
+}
 .table_checkbox{
 	width: 10pt;
 	padding-right: 10pt;
