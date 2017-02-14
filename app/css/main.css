@@ -116,6 +116,13 @@ label{
 .fill_height{
 	height: 100%;
 }
+#checkout_button{
+	width: 30%;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 2em;
+    margin-bottom: 3em;
+}
 
 
 

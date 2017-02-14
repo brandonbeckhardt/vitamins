@@ -37,7 +37,7 @@
 
                             <td >{{custom_vitamin.dosage[$index]}}{{}}</td>
                             <td ng-show="{{$last}}">  {{custom_vitamin.number_of_pills}}</td>
-                            <td ng-show="{{$last}}"> {{custom_vitamin.calculated_price}}</td>
+                            <td ng-show="{{$last}}"> ${{custom_vitamin.calculated_price}}</td>
                             <td ng-show="{{$last}}">  <button type="submit" class="form-control" name="save_for_later"value="{{custom_vitamin._id}}" >Save For Later</button></td>
                             <td ng-show="{{$last}}">  <button type="submit" class="form-control" name="delete" value="{{custom_vitamin._id}}" >X</button></td>
                         </tr>
@@ -49,14 +49,14 @@
                         <td></td>
                         <td></td>
                         <td>Subtotal</td>
-                        <td>{{total_price}}</td>
+                        <td>${{total_price}}</td>
                     </tr>
                 </table>
             </div>
-            <button type="submit" class="form-control" name="checkout" value="checkout">Proceed to Checkout</button>
+            <button type="submit" class="form-control" id="checkout_button" name="checkout" value="checkout">Proceed to Checkout</button>
             <div class="well">
                 <h3>Save For Later </h3>
-               <table class = "generic_table table table-bordered table-hover">
+               <table class = "generic_table table table-bordered table-hover vitamins_table">
                     <tr>
                         <th>Vitamin </th>
                         <th> Dosage </th>
@@ -73,7 +73,7 @@
                             <td>{{vitamins[vitamin_id].name}}</td>
                             <td>{{custom_vitamin.dosage[$index]}}{{}}</td>
                             <td ng-show="{{$last}}">  {{custom_vitamin.number_of_pills}}</td>
-                            <td ng-show="{{$last}}">  {{custom_vitamin_price(custom_vitamin)}}</td>
+                            <td ng-show="{{$last}}">  ${{custom_vitamin.calculated_price}}</td>
                              <td ng-show="{{$last}}">  <button type="submit" class="form-control" name="add_to_cart" value="{{custom_vitamin._id}}" >Add To Cart</button></td>
                              <td ng-show="{{$last}}">  <button type="submit" class="form-control" name="delete" value="{{custom_vitamin._id}}" >X</button></td>
                     </tr>
