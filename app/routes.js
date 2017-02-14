@@ -86,6 +86,7 @@ module.exports = function(app, passport) {
     //--------------------------------Cart------------------------------------------------
     app.get('/cart',function(req, res){
         if (!loggedIn(req)){
+            req.session.redirect_to_cart = true;
             req.flash("loginMessage", "You must login to access your cart");
             res.redirect('/login');
         } else {
