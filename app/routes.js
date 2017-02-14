@@ -278,39 +278,46 @@ module.exports = function(app, passport) {
                 db.query('delete from orders where id=' + order_id + ";");
             });
         }).catch(function(error){
-
+            throw error;
         });
     });
 
     //----------------- Creation of a Vitamin (user should never see this) -------------------------
     app.get('/create_vitamin', function(req, res){
-        res.render('create_vitamin.ejs', {message: req.flash('vitamin_created_message') });
+        res.render('create_vitamin.ejs', {message: {success:req.flash('vitamin_created_message'), error:req.flash('auth_failed') }});
     });
     app.post('/create_vitamin', function(req, res){
         // Note there is no authentication
         form_vitamin = req.body;
         Vitamin = require("./models/vitamin");
         vitamin = new Vitamin();
-        vitamin.name = form_vitamin.name;
-        vitamin.description = form_vitamin.description;
-        vitamin.price_per_unit = parseFloat(form_vitamin.price_per_unit);
-        vitamin.dose_range = form_vitamin.dose_range.split(',').map(parseFloat);
-        vitamin.times_per_day =form_vitamin.times_per_day;
-        vitamin.units = form_vitamin.units;
-        vitamin.save(function(err, vitamin){
-            if (err) throw err;
-            Vitamin.find({}, function(err, vitamins){
+        auth = form_vitamin.vitamin_creation_auth;
+        if (auth == temp_authentication){
+            vitamin.name = form_vitamin.name;
+            vitamin.description = form_vitamin.description;
+            vitamin.price_per_unit = parseFloat(form_vitamin.price_per_unit);
+            vitamin.dose_range = form_vitamin.dose_range.split(',').map(parseFloat);
+            vitamin.times_per_day =form_vitamin.times_per_day;
+            vitamin.units = form_vitamin.units;
+            vitamin.save(function(err, vitamin){
                 if (err) throw err;
-                global.vitamins = vitamins;
-                console.log('Saved!');
-                req.flash("vitamin_created_message", "Vitamin Created");
-                res.redirect('/create_vitamin');
-            }); 
-        });
+                Vitamin.find({}, function(err, vitamins){
+                    if (err) throw err;
+                    global.vitamins = vitamins;
+                    console.log('Saved!');
+                    req.flash("vitamin_created_message", "Vitamin Created");
+
+                    res.redirect('/create_vitamin');
+                }); 
+            });
+        } else {
+            req.flash("auth_failed", "You did not provide the proper authentication password");
+            res.redirect('/create_vitamin');
+        }
     });
 
-
     //------------------------------------ Generic Functions ----------------------------
+    var temp_authentication ="temp_auth_service";
     ValueNamesToQuery = function(value_names){
         query = " ("
         for (index in value_names){
