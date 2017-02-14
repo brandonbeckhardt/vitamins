@@ -110,6 +110,12 @@ label{
 .left_aligned_table tbody>tr>th,tbody>tr>td {
 	text-align: left;
 }
+#address_and_payment_row{
+	height: 20em;
+}
+.fill_height{
+	height: 100%;
+}
 
 
 

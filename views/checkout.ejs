@@ -1,100 +1,98 @@
 <!-- views/profile.ejs -->
 <head>
-     
+
     <link rel="stylesheet" href="/css/cart.css" crossorigin="anonymous">
 </head>
 <body ng-app="app">
-<div  ng-controller="CheckoutController"  ng-init="init('<%= JSON.stringify(info) %>' )">
-<div class="container">
+    <div  ng-controller="CheckoutController"  ng-init="init('<%= JSON.stringify(info) %>' )">
+        <div class="container">
 
-    <div class="page-header text-center">
-        <h1></span> Checkout</h1>
-    
-    </div>
-     <% if (message.length > 0) { %>
-        <div class="alert alert-success"><%= message %></div>
-    <% } %>
+            <div class="page-header text-center">
+                <h1> Checkout</h1>
+            </div>
+            <% if (message.length > 0) { %>
+            <div class="alert alert-success"><%= message %></div>
+            <% } %>
 
-    <div class="row">
-        <!-- LOCAL INFORMATION -->
-        <div class="col-sm-12">
+            <div class="row">
+                <!-- LOCAL INFORMATION -->
+                <div class="col-sm-12">
 
-            <div class="well">
-                <h3>Vitamins</h3>
-                <table class="generic_table table table-bordered vitamins_table table-hover  ">
-                    <tr>
-                        <th>Vitamin </th>
-                        <th> Dosage </th>
-                        <th> Quantity </th>
-                        <th> Price </th>
-                    </tr>
-                        <tbody ng-repeat="custom_vitamin in custom_vitamins" class="generic_table ">
-                            <tr ng-repeat="vitamin_id in custom_vitamin.vitamin_id" >
-                                <td>{{vitamins[vitamin_id].name}}</td>
-                                <td>{{custom_vitamin.dosage[$index]}}{{}}</td>
-                                <td ng-show="{{$last}}">  {{custom_vitamin.number_of_pills}}</td>
-                                 <td ng-show="{{$last}}">
-                                <input type="hidden" name="calculated_prices" ng-value="{{custom_vitamin_price(custom_vitamin)}}">
-                                 <div>  ${{custom_vitamin_price(custom_vitamin)}} </div>
-                            </td>
+                    <div class="well">
+                        <h3>Vitamins</h3>
+                        <table class="generic_table table table-bordered vitamins_table table-hover  ">
+                            <tr>
+                                <th>Vitamin </th>
+                                <th> Dosage </th>
+                                <th> Quantity </th>
+                                <th> Price </th>
                             </tr>
-                        </tbody>
-                         <tr>
+                            <tbody ng-repeat="custom_vitamin in custom_vitamins" class="generic_table ">
+                                <tr ng-repeat="vitamin_id in custom_vitamin.vitamin_id" >
+                                    <td>{{vitamins[vitamin_id].name}}</td>
+                                    <td>{{custom_vitamin.dosage[$index]}}{{}}</td>
+                                    <td ng-show="{{$last}}">  {{custom_vitamin.number_of_pills}}</td>
+                                    <td ng-show="{{$last}}">
+                                        <input type="hidden" name="calculated_prices" ng-value="{{custom_vitamin_price(custom_vitamin)}}">
+                                        <div>  ${{custom_vitamin_price(custom_vitamin)}} </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tr>
                                 <td></td>
                                 <td></td>
                                 <td class="right_text_align">Subtotal</td>
                                 <td class="left_text_align">${{total_price}}</td>
                             </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td class="right_text_align">Tax (8.75%)</td>
-                            <td class="left_text_align">+${{(total_price * .0875).toFixed(2) }} </td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td class="right_text_align"><b>Total</b></td>
-                            <td class="left_text_align"><b>${{(total_price * 1.0875).toFixed(2)}} <b/></td>
-                        </tr>
-                </table>
-            </div>
-    </div>
-    </div>
-     <div class="row">
-        <div class="col-sm-6">
-            <div class="well">
-                <h3>Address</h3>
-                <!-- By Default, is first address.  Need to change to make custom default -->
-                <div ng-show="current_address">
-                    <div>{{current_address.street}}</div> 
-                    <div>{{current_address.city}}, {{current_address.state}}</div>
-                    <div>{{current_address.zip_code}}</div>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td class="right_text_align">Tax (8.75%)</td>
+                                <td class="left_text_align">+${{(total_price * .0875).toFixed(2) }} </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td class="right_text_align"><b>Total</b></td>
+                                <td class="left_text_align"><b>${{(total_price * 1.0875).toFixed(2)}} </b></td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
-                <div ng-show="changing_address">
-                    <form>
-                        <div ng-repeat="address in addresses">
-                            <input type="radio" name="radio_button_addresses" ng-value = "address" ng-model="$parent.current_address" >
-                            <label class="control-label">{{address.street}},{{address.city}}, {{address.state}},{{address.zip_code}} </label>
+            </div>
+            <div class="row" id="address_and_payment_row">
+                <div class="col-sm-6">
+                    <div class="well fill_height">
+                        <h3>Address</h3>
+                        <!-- By Default, is first address.  Need to change to make custom default -->
+                        <div ng-show="current_address">
+                            <div>{{current_address.street}}</div> 
+                            <div>{{current_address.city}}, {{current_address.state}}</div>
+                            <div>{{current_address.zip_code}}</div>
                         </div>
-                        <button class="form-control"ng-click="change_address('cancel')">Cancel</button>
-                        <button class="form-control"ng-click="change_address('save')">Save</button>
-                    </form>
+                        <div ng-show="changing_address">
+                            <form>
+                                <div ng-repeat="address in addresses">
+                                    <input type="radio" name="radio_button_addresses" ng-value = "address" ng-model="$parent.current_address" >
+                                    <label class="control-label">{{address.street}},{{address.city}}, {{address.state}},{{address.zip_code}} </label>
+                                </div>
+                                <button class="form-control"ng-click="change_address('cancel')">Cancel</button>
+                                <button class="form-control"ng-click="change_address('save')">Save</button>
+                            </form>
+                        </div>
+                        <!-- User has no addresses on file. Must add address -->
+                        <div ng-show="current_address">
+                            <button class="form-control"ng-click="change_address('show')">Change Address</button></br>
+                        </div>
+                        <button class="form-control"onclick="location.href ='/add_address?redirect_to_checkout=true'">Add Address</button>
+                    </div>
                 </div>
-                <!-- User has no addresses on file. Must add address -->
-                <div ng-show="current_address">
-                    <button class="form-control"ng-click="change_address('show')">Change Address</button></br>
+                <div class="col-sm-6">
+                    <div class="well fill_height">
+                        <h3>Payment</h3>
+                    </div>
                 </div>
-                <button class="form-control"onclick="location.href ='/add_address?redirect_to_checkout=true'">Add Address</a>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-6">
-            <div class="well">
-                <h3>Payment</h3>
-            </div>
-        </div>
-    </div>
-    
+            </div> 
+        </div> 
+    </div>  
 </body>
