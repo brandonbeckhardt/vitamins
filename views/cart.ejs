@@ -21,25 +21,25 @@
             <div class="well">
                 <h3>Cart</h3>
                 
-                <table class = "generic_table table table-bordered table-hover vitamins_table" >
-                    <tr>
-                        <th>Vitamin </th>
-                        <th> Dosage </th>
-                        <th> Quantity </th>
-                        <th> Price </th>
+                <table class = "responsive_table generic_table table table-bordered table-hover vitamins_table" >
+                    <tr class="mobile_hide">
+                        <th><label class="mobile_hide">Vitamin </label></th>
+                        <th> <label class="mobile_hide">Dosage </label> </th>
+                        <th> <label class="mobile_hide">Quantity </label> </th>
+                        <th> <label class="mobile_hide">Price </label> </th>
                         <th>  </th>
                         <th>  </th>
                     </tr>
                     <tbody ng-repeat="custom_vitamin in cart" class ="generic_table">
         
                         <tr ng-repeat="vitamin_id in custom_vitamin.vitamin_id">
-                            <td>{{custom_vitamin.vitamin_names[$index]}}</td>
+                            <td><label class="mobile_show">Vitamin </label>{{custom_vitamin.vitamin_names[$index]}}</td>
 
-                            <td >{{custom_vitamin.dosage[$index]}}{{}}</td>
-                            <td ng-show="{{$last}}">  {{custom_vitamin.number_of_pills}}</td>
-                            <td ng-show="{{$last}}"> ${{custom_vitamin.calculated_price}}</td>
-                            <td ng-show="{{$last}}">  <button type="submit" class="form-control" name="save_for_later"value="{{custom_vitamin._id}}" >Save For Later</button></td>
-                            <td ng-show="{{$last}}">  <button type="submit" class="form-control" name="delete" value="{{custom_vitamin._id}}" >X</button></td>
+                            <td ><label class="mobile_show">Dosage </label>{{custom_vitamin.dosage[$index]}}{{}}</td>
+                            <td ng-show="{{$last}}"><label class="mobile_show">Quantity </label>  {{custom_vitamin.number_of_pills}}</td>
+                            <td ng-show="{{$last}}"> <label class="mobile_show">Price </label>${{custom_vitamin.calculated_price}}</td>
+                            <td ng-show="{{$last}}">  <button type="submit" class="fitted_form_input form-control" name="save_for_later"value="{{custom_vitamin._id}}" >Save For Later</button></td>
+                            <td ng-show="{{$last}}">  <button type="submit" class="fitted_form_input form-control" name="delete" value="{{custom_vitamin._id}}" >X</button></td>
                         </tr>
 
                     </tbody>
@@ -56,24 +56,24 @@
             <button type="submit" class="form-control" id="checkout_button" name="checkout" value="checkout">Proceed to Checkout</button>
             <div class="well">
                 <h3>Save For Later </h3>
-               <table class = "generic_table table table-bordered table-hover vitamins_table">
-                    <tr>
-                        <th>Vitamin </th>
-                        <th> Dosage </th>
-                        <th> Quantity </th>
-                        <th> Price </th>
-                        <th></th>
-                        <th></th>
+               <table class = "responsive_table generic_table table table-bordered table-hover vitamins_table" >
+                    <tr class="mobile_hide">
+                        <th><label class="mobile_hide">Vitamin </label></th>
+                        <th> <label class="mobile_hide">Dosage </label> </th>
+                        <th> <label class="mobile_hide">Quantity </label> </th>
+                        <th> <label class="mobile_hide">Price </label> </th>
+                        <th>  </th>
+                        <th>  </th>
                     </tr>
                     
                         <tbody ng-repeat="custom_vitamin in save_for_later" class="custom_vitamin_divider">
                         
                             <tr ng-repeat="vitamin_id in custom_vitamin.vitamin_id" >
                             
-                            <td>{{vitamins[vitamin_id].name}}</td>
-                            <td>{{custom_vitamin.dosage[$index]}}{{}}</td>
-                            <td ng-show="{{$last}}">  {{custom_vitamin.number_of_pills}}</td>
-                            <td ng-show="{{$last}}">  ${{custom_vitamin.calculated_price}}</td>
+                            <td><label class="mobile_show">Vitamin </label>{{vitamins[vitamin_id].name}}</td>
+                            <td><label class="mobile_show">Dosage </label>{{custom_vitamin.dosage[$index]}}{{}}</td>
+                            <td ng-show="{{$last}}"> <label class="mobile_hide">Quantity </label> </th>  {{custom_vitamin.number_of_pills}}</td>
+                            <td ng-show="{{$last}}"> <label class="mobile_hide">Price </label> </th> ${{custom_vitamin.calculated_price}}</td>
                              <td ng-show="{{$last}}">  <button type="submit" class="form-control" name="add_to_cart" value="{{custom_vitamin._id}}" >Add To Cart</button></td>
                              <td ng-show="{{$last}}">  <button type="submit" class="form-control" name="delete" value="{{custom_vitamin._id}}" >X</button></td>
                     </tr>

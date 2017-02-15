@@ -2,87 +2,92 @@
 
 </head>
 <body ng-app="app">
+
 	<div  ng-controller="VitaminsController"  ng-init="init('<%= JSON.stringify(data) %>' )">
 
 		<form action="/cart" method="POST" id="vitamin_form">
 			<div class="form-group">
+
+                <div class="col-sm-12">
+
+
 				<div class="row">
-					<div class="main_wrapper">
-						<div class ="generic_wrapper">
-							<h2>Create your Vitamin!</h2>
-							<div class="vitamin_form_input ">
-								<table class= "left_aligned_table generic_table  table table-hover">
-									<tr>
-										<th></th>
-										<th ><label>Vitamin </label></th>
-										<th > <label>Description</label> </th>
-									</tr>
-									<tbody ng-repeat="vitamin in vitamins">
-										<tr>
-										<td class="table_checkbox"> <input type="checkbox" name="{{vitamin.name}}" ng-click="AddOrRemoveVitamin(vitamin)" ng-model="vitamin.Selected" ></td>
-										<td>{{vitamin.name}}</td>
-										<td>{{vitamin.description}}</td>
+					<div class="col-sm-12">
+						<div class="main_wrapper">
+							<div class="well">
+								<h2>Create your Vitamin!</h2>
+								<div class="vitamin_form_input ">
+									<table class= "responsive_table left_aligned_table generic_table  table table-hover">
+										<tr class="mobile_hide">
+											<th ><label class="mobile_hide">Vitamin </label></th>
+											<th > <label class="mobile_hide">Description</label> </th>
 										</tr>
-									</tbody> 
-						
-								</table>
+										<tbody ng-repeat="vitamin in vitamins">
+											<tr>
+											<td><input type="checkbox" name="{{vitamin.name}}" ng-click="AddOrRemoveVitamin(vitamin)" ng-model="vitamin.Selected" >
+											<label class="mobile_show">Vitamin: </label>{{vitamin.name}}</td>
+											<td><label class="mobile_show">Description:</label>{{vitamin.description}}</td>
+											</tr>
+										</tbody> 
+							
+									</table>
+
+								</div>
+							</div>
+							<div class="well">
+								<div class="vitamin_form_input ">
+									<table class = "responsive_table left_aligned_table generic_table table table-hover">
+									<tr class="mobile_hide">
+										<th class="mobile_hide">Vitamin </th>
+										<th class="mobile_hide"> Dosage </th>
+										<th class="mobile_hide"> Price </th>
+										<th></th>
+									</tr>
+									<tbody ng-repeat="vitamin in selected_vitamins" >
+										<tr>
+										<td><label class="mobile_show">Vitamin: </label>{{vitamin.name}}</td>
+										<input type="hidden" name="vitamin_name" value="{{vitamin.name}}" >
+										<input type="hidden" name="vitamin_id" value="{{vitamin._id}}" >
+										<td> 
+
+											<select name="dosage" class="fitted_form_input form-control" ng-model="vitamin.dose_amount" ng-options="item as item for item in vitamin.dose_range track by item" required>
+												<!-- add unit -->
+												<option value="">Select Dosage</option> 
+											</select>
+											<span ng-show="vitamin_form.dosage.$error.required">Please Select Dosage.</span>
+										</td>
+										<td>
+											<label class="mobile_show">Price: </label>
+												{{((vitamin.dose_amount || 0) * vitamin.price_per_unit).toFixed( 2 )}} ({{vitamin.price_per_unit}}/{{vitamin.units}})
+										
+											<input type="hidden" name="price" value="{{((vitamin.dose_amount || 0)  * vitamin.price_per_unit).toFixed( 2 )}}">
+										</td>
+										<td>
+											<button class="fitted_form_input form-control" ng-click="AddOrRemoveVitamin(vitamin)">X</button>
+										</td>
+										<tr>
+										</table>
+									</div>
+										<div class="vitamin_form_input inline">
+											<label>Number of times per day</label>
+											<select name="times_per_day" class="fitted_form_input form-control drop_down same_line" ng-model="times_per_day" ng-options="tpd as tpd for tpd in max_tpd_range track by tpd" 
+											ng-init="times_per_day = max_tpd_range[0]"required>
+											</select>
+									</div>
+									<div class="vitamin_form_input">
+										<label>Number of pills</label><input type="number" ng-model="number_of_pills" name="number_of_pills" min="20">
+									</div>
+									<div class="vitamin_form_input">
+										<label>Total Price:</label>{{custom_vitamin_price()}}
+									</div>
+								</tr>
+								</tbody>
 
 							</div>
-						</div>
-						<div class="generic_wrapper">
-									<div class="vitamin_form_input ">
-
-								<table class = "left_aligned_table generic_table  table table-hover">
-								<tr>
-									<th>Vitamin </th>
-									<th> Dosage </th>
-									<th> Price </th>
-									<th></th>
-								</tr>
-								<tbody ng-repeat="vitamin in selected_vitamins" >
-									<tr>
-									<td>{{vitamin.name}}</td>
-
-									<input type="hidden" name="vitamin_name" value="{{vitamin.name}}" >
-									<input type="hidden" name="vitamin_id" value="{{vitamin._id}}" >
-									<td> 
-
-										<select name="dosage" class="form-control" ng-model="vitamin.dose_amount" ng-options="item as item for item in vitamin.dose_range track by item" required>
-											<!-- add unit -->
-											<option value="">Select Dosage</option> 
-										</select>
-										<span ng-show="vitamin_form.dosage.$error.required">Please Select Dosage.</span>
-									</td>
-									<td pricing>
-										<div name="vit_price" class="form-control pricing">
-											{{((vitamin.dose_amount || 0) * vitamin.price_per_unit).toFixed( 2 )}} ({{vitamin.price_per_unit}}/{{vitamin.units}})
-										</div>
-										<input type="hidden" name="price" value="{{((vitamin.dose_amount || 0)  * vitamin.price_per_unit).toFixed( 2 )}}">
-									</td>
-									<td>
-										<button class="form-control" ng-click="AddOrRemoveVitamin(vitamin)">X</button>
-									</td>
-									<tr>
-									</table>
-								</div>
-									<div class="vitamin_form_input inline">
-										<label>Number of times per day</label><select name="times_per_day" class="form-control drop_down same_line" ng-model="times_per_day" ng-options="tpd as tpd for tpd in max_tpd_range track by tpd" 
-										ng-init="times_per_day = max_tpd_range[0]"required>
-									</select>
-								</div>
-								<div class="vitamin_form_input">
-									<label>Number of pills</label><input type="number" ng-model="number_of_pills" name="number_of_pills" min="20">
-								</div>
-								<div class="vitamin_form_input">
-									<label>Total Price:</label>{{custom_vitamin_price()}}
-								</div>
-							</tr>
-							</tbody>
-
-						</div>
-					</div>	
+						</div>	
+					</div>
+					<input type="submit" value="Add To Cart" class="form-control submit_button">
 				</div>
-				<input type="submit" value="Add To Cart" class="form-control submit_button">
 			</div>
 
 		</form>
