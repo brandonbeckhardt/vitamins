@@ -117,12 +117,101 @@ label{
 	height: 100%;
 }
 #checkout_button{
-	width: 30%;
+	width: auto;
     margin-right: auto;
     margin-left: auto;
     margin-top: 2em;
     margin-bottom: 3em;
 }
+
+
+.responsive_table { 
+  width: 100%; 
+  border-collapse: collapse; 
+}
+.responsive_table button{
+	width: auto;
+}
+.save_for_later_or_delete{
+	width: auto;
+
+}
+.save_for_later_or_delete button{
+	display:inline-block; 
+}
+
+
+/*What to do with mobile_show when are are not on mobile*/
+label.mobile_show {
+	display: none;
+}
+
+/*What to do with mobile hide when in mobile*/
+label.mobile_hide {
+	display: inline;
+}
+
+/* 
+Max width before this PARTICULAR table gets nasty
+This query will take effect for any screen smaller than 760px
+and also iPads specifically.
+*/
+@media 
+only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px)  {
+
+	/* Force table to not be like tables anymore */
+	.responsive_table, .responsive_table thead, .responsive_table tbody, .responsive_table th, .responsive_table td, .responsive_table tr { 
+		display: block; 
+	}
+	
+	/* Hide table headers (but not display: none;, for accessibility) */
+/*	thead tr { 
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}*/
+	
+	tr { border: 1px solid #ccc; }
+	
+	td { 
+		/* Behave  like a "row" */
+		border: none;
+		border-bottom: 1px solid #eee; 
+		position: relative;
+		padding-left: 50%; 
+	}
+	
+	td:before { 
+		/* Now like a table header */
+		position: absolute;
+		/* Top/left values mimic padding */
+		top: 6px;
+		left: 6px;
+		width: 45%; 
+		padding-right: 10px; 
+		white-space: nowrap;
+	}
+	/*What to do with mobile show when in mobile*/
+	label.mobile_show {
+		display:inline;
+	}
+	/*What to do with mobile hide when in mobile*/
+	label.mobile_hide {
+		display: none;
+	}
+	tr.mobile_hide{
+		display: none;
+	}
+	
+	/*
+	Label the data
+	*/
+/*	td:nth-of-type(1):before { content: "First Name"; }
+	td:nth-of-type(2):before { content: "Last Name"; }
+*/
+}
+
 
 
 
