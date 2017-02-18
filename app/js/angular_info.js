@@ -27,7 +27,7 @@ angular_app.factory('myService', function(){
 angular_app.controller('VitaminsController', function($scope, $attrs, myService) {
 	$scope.init = function(data){
 		data = JSON.parse(data);
-		$scope.vitamins = Object.values(data.vitamins);
+		$scope.vitamins = Object.keys(data.vitamins).map(function(key) {return data.vitamins[key];});
 		// $scope.build_vitamin_info = data.build_vitamin_info;
 		$scope.selected_vitamins = [];
 		$scope.dose_amount = 0;

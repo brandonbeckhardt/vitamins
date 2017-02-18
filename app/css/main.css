@@ -117,24 +117,30 @@ label{
 	height: 100%;
 }
 #checkout_button{
-	width: 30%;
+	width: auto;
     margin-right: auto;
     margin-left: auto;
     margin-top: 2em;
     margin-bottom: 3em;
 }
 
-.fitted_form_input{
-	/*font-size: 1.4vw;*/
-}
-
-
-
 
 .responsive_table { 
   width: 100%; 
   border-collapse: collapse; 
 }
+.responsive_table button{
+	width: auto;
+}
+.save_for_later_or_delete{
+	width: auto;
+
+}
+.save_for_later_or_delete button{
+	display:inline-block; 
+}
+
+
 /*What to do with mobile_show when are are not on mobile*/
 label.mobile_show {
 	display: none;
