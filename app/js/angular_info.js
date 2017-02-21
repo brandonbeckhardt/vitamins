@@ -1,5 +1,6 @@
 var angular_app = angular.module('app', []);
 
+var tax_percentage= 8.75;
 
 angular_app.factory('myService', function(){
 	return{
@@ -90,7 +91,7 @@ angular_app.controller('CartController', function($scope, $attrs, $http, myServi
 		$scope.vitamins = data.vitamins;
 		$scope.cart = [];
 		$scope.save_for_later = [];
-		$scope.total_price = 0;
+		$scope.subtotal = 0;
 		for (index in custom_vitamins){
 			custom_vitamin = custom_vitamins[index];
 			custom_vitamin.vitamin_names = [];
@@ -105,12 +106,12 @@ angular_app.controller('CartController', function($scope, $attrs, $http, myServi
 			custom_vitamin.calculated_price = myService.CalculatePrice(prices, custom_vitamin.number_of_pills);
 			if (custom_vitamin.status == "cart"){
 				$scope.cart.push(custom_vitamin);
-				$scope.total_price += Number(custom_vitamin.calculated_price); //only within cart
+				$scope.subtotal += Number(custom_vitamin.calculated_price); //only within cart
 			} else if (custom_vitamin.status == "save_for_later"){
 				$scope.save_for_later.push(custom_vitamin);
 			}
 		}
-		$scope.total_price = $scope.total_price.toFixed(2);
+		$scope.subtotal = $scope.subtotal.toFixed(2);
 	}
 
 });
@@ -120,11 +121,12 @@ angular_app.controller('CheckoutController', function($scope, $attrs, $http, myS
 		$scope.custom_vitamins = data.custom_vitamins;
 		$scope.vitamins = data.vitamins;
 		$scope.addresses = data.addresses;
+		$scope.tax_percentage = tax_percentage;
 		if ($scope.addresses.length > 0){
 			$scope.current_address = $scope.addresses[0]; //Hacky, would eventually like to make a default
 		}
 		$scope.changing_address = false;
-		$scope.total_price = 0;
+		$scope.subtotal = 0;
 		for (index in $scope.custom_vitamins){
 			custom_vitamin = $scope.custom_vitamins[index];
 			prices = [];
@@ -134,9 +136,9 @@ angular_app.controller('CheckoutController', function($scope, $attrs, $http, myS
 				prices.push(vitamin.price_per_unit * dosage);
 			}
 			custom_vitamin.calculated_price = myService.CalculatePrice(prices, custom_vitamin.number_of_pills);
-			$scope.total_price += Number(custom_vitamin.calculated_price); //only within cart
+			$scope.subtotal += Number(custom_vitamin.calculated_price); //only within cart
 		}
-		$scope.total_price = $scope.total_price.toFixed(2);
+		$scope.subtotal = $scope.subtotal.toFixed(2);
 	}
 	$scope.custom_vitamin_price = function(custom_vitamin){
 		var prices = [];

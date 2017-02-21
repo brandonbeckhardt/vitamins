@@ -231,61 +231,61 @@ module.exports = function(app, passport) {
              });
     });
     app.post('/submit_order',function(req, res){
-        var data = JSON.parse(req.body.order_data);
-        console.log(data)
+        var data = req.body;
+        console.log(data);
         //Build order
-        var user_address_info = data["user_address_info"];
+        // var user_address_info = data["user_address_info"];
 
-        // Create order
-        order = {};
-        order['user_id'] = user_address_info.user_id;
-        order['address_id'] = user_address_info.address_id;
-        order['price'] = data.total_price;
-        value_names = ["user_id","address_id", "price"];
-        valueNamesToQuery = ValueNamesToQuery(value_names);
-        valuesToQuery = ValuesToQuery(value_names, order);
+        // // Create order
+        // order = {};
+        // order['user_id'] = user_address_info.user_id;
+        // order['address_id'] = user_address_info.address_id;
+        // order['price'] = data.total_price;
+        // value_names = ["user_id","address_id", "price"];
+        // valueNamesToQuery = ValueNamesToQuery(value_names);
+        // valuesToQuery = ValuesToQuery(value_names, order);
 
-        create_order_query = 'insert into orders'+valueNamesToQuery+'values'+valuesToQuery+' returning id;';
-        db.one(create_order_query)
-        .then(function(order){
-            var order_id = order.id;
-            var vitamin_info = data["vitamin_info"];
-            var orderDetails = [];
-            for (vit_index in vitamin_info){
-                var vitamin_details = {};
-                var vitamin = vitamin_info[vit_index];
-                vitamin_details['order_id'] = order_id;
-                vitamin_details['vitamin_id'] = vitamin.vitamin_id;
-                vitamin_details['dose'] = vitamin.dosage;
-                vitamin_details['times_per_day'] = vitamin.times_per_day;
-                orderDetails.push(vitamin_details);
-            }
-            var value_names = ['order_id', 'vitamin_id','dose','times_per_day'];
-            var valueNamesToQuery = ValueNamesToQuery(value_names);
-            var query_values = "";
-            for (detail_index in orderDetails){
-                detail = orderDetails[detail_index];
-                query_values += ValuesToQuery(value_names, detail);
-                 if (detail_index < orderDetails.length - 1){
-                    query_values += ","
-                }
-            }
-            create_order_details_query = 'insert into order_details'+valueNamesToQuery+'values'+query_values+';'
-            console.log(create_order_details_query);
-            db.query(create_order_details_query)
-            .then(function(i){
-                console.log(order_id)
-                res.render('order_successful.ejs', {'order_id':order_id }, function(err, html) {
-                    res.send(html);
-                }); 
-            }).catch(function(error){
-                // Need to delete order from orders from orders
-                console.log(order_id);
-                db.query('delete from orders where id=' + order_id + ";");
-            });
-        }).catch(function(error){
-            throw error;
-        });
+        // create_order_query = 'insert into orders'+valueNamesToQuery+'values'+valuesToQuery+' returning id;';
+        // db.one(create_order_query)
+        // .then(function(order){
+        //     var order_id = order.id;
+        //     var vitamin_info = data["vitamin_info"];
+        //     var orderDetails = [];
+        //     for (vit_index in vitamin_info){
+        //         var vitamin_details = {};
+        //         var vitamin = vitamin_info[vit_index];
+        //         vitamin_details['order_id'] = order_id;
+        //         vitamin_details['vitamin_id'] = vitamin.vitamin_id;
+        //         vitamin_details['dose'] = vitamin.dosage;
+        //         vitamin_details['times_per_day'] = vitamin.times_per_day;
+        //         orderDetails.push(vitamin_details);
+        //     }
+        //     var value_names = ['order_id', 'vitamin_id','dose','times_per_day'];
+        //     var valueNamesToQuery = ValueNamesToQuery(value_names);
+        //     var query_values = "";
+        //     for (detail_index in orderDetails){
+        //         detail = orderDetails[detail_index];
+        //         query_values += ValuesToQuery(value_names, detail);
+        //          if (detail_index < orderDetails.length - 1){
+        //             query_values += ","
+        //         }
+        //     }
+        //     create_order_details_query = 'insert into order_details'+valueNamesToQuery+'values'+query_values+';'
+        //     console.log(create_order_details_query);
+        //     db.query(create_order_details_query)
+        //     .then(function(i){
+        //         console.log(order_id)
+        //         res.render('order_successful.ejs', {'order_id':order_id }, function(err, html) {
+        //             res.send(html);
+        //         }); 
+        //     }).catch(function(error){
+        //         // Need to delete order from orders from orders
+        //         console.log(order_id);
+        //         db.query('delete from orders where id=' + order_id + ";");
+        //     });
+        // }).catch(function(error){
+        //     throw error;
+        // });
     });
 
     //----------------- Creation of a Vitamin (user should never see this) -------------------------
@@ -312,7 +312,6 @@ module.exports = function(app, passport) {
                     global.vitamins = vitamins;
                     console.log('Saved!');
                     req.flash("vitamin_created_message", "Vitamin Created");
-
                     res.redirect('/create_vitamin');
                 }); 
             });
