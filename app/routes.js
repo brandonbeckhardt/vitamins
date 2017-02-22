@@ -146,35 +146,36 @@ module.exports = function(app, passport) {
     // Called from cart to determine what to do with information
     app.post('/handle_cart', function(req, res){
         var CustomVitamins = require("./models/custom_vitamin");
-        // Check if we are saving for later or adding to cart
-        if (req.body.save_for_later || req.body.add_to_cart){
-            if (req.body.save_for_later){
-                var custom_vitamin_id = req.body.save_for_later;
-            } else {
-                var custom_vitamin_id = req.body.add_to_cart;
-            }
-            CustomVitamins.findOne({"_id":custom_vitamin_id}, function(err, custom_vitamin) {
+        if (req.body.save_for_later){
+            CustomVitamins.findOneAndUpdate({"_id":req.body.save_for_later}, {status:"save_for_later"},function(err, custom_vitamin) {
                 if (err) throw err;
-                if (req.body.save_for_later){
-                    custom_vitamin.status="save_for_later";
-                } else {
-                    custom_vitamin.status="cart";
-                }
-                custom_vitamin.save(function(err, custom_vitamin){
-                    if (req.body.save_for_later){
-                        req.flash("cart_message","Your custom vitamin has been saved for later");
-                    } else {
-                        req.flash("cart_message","Your custom vitamin has been added to the cart");
-                    }
-                    res.redirect('/cart');
-                });
-            });
-        } else if (req.body.delete){
-            CustomVitamins.remove({"_id":req.body.delete}, function(err){
-                if (err) throw err;
-                req.flash("cart_message","Your custom vitamin has been removed.");
+                req.flash("cart_message","Your custom vitamin has been saved for later");
                 res.redirect('/cart');
             });
+        } else if ( req.body.add_to_cart){
+             CustomVitamins.findOneAndUpdate({"_id":req.body.add_to_cart}, {status:"cart"},function(err, custom_vitamin) {
+                if (err) throw err;
+                req.flash("cart_message","Your custom vitamin has been added to the cart");
+                res.redirect('/cart');
+            });
+        } else if (req.body.delete){
+            var PreviousOrders = require("./models/order");
+            PreviousOrders.count({"custom_vitamin_id": req.body.delete}, function (err, count){ 
+                if(count>0){ //If an order has been placed using this custom_vitamin_id, we cannot delete it due to foreign key constarints
+                    console.log("Order has already been placed with this custom_vitamin_id, cannot delete vitamin");
+                    CustomVitamins.findOneAndUpdate({"_id":req.body.delete},{status:undefined},function(err, custom_vitamin) {
+                        if (err) throw err;
+                        req.flash("cart_message","Your custom vitamin has been removed.");
+                        res.redirect('/cart');
+                    });
+                } else { // We can delete if no fk constraint is violated 
+                    CustomVitamins.remove({"_id":req.body.delete}, function(err){
+                        if (err) throw err;
+                        req.flash("cart_message","Your custom vitamin has been removed.");
+                        res.redirect('/cart');
+                    });
+                }
+            }); 
         } else if (req.body.checkout){
             res.redirect('/checkout');
         } else {
