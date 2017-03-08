@@ -87,15 +87,18 @@ angular_app.controller('VitaminsController', function($scope, $attrs, myService)
 angular_app.controller('CartController', function($scope, $attrs, $http, myService) {
 	$scope.init = function(data){	
 		data = JSON.parse(data);
-		var custom_vitamins = data.custom_vitamins;
+		var cart_items = data.cart_items;
 		$scope.vitamins = data.vitamins;
 		$scope.cart = [];
 		$scope.save_for_later = [];
 		$scope.subtotal = 0;
-		for (index in custom_vitamins){
-			custom_vitamin = custom_vitamins[index];
+		for (index in cart_items){
+			var cart_item = cart_items[index];
+			console.log(cart_item);
+			custom_vitamin = cart_item["custom_vitamin"][0];
 			custom_vitamin.vitamin_names = [];
 			prices = [];
+
 			for (id_index in custom_vitamin.vitamin_id){
 				// vitamin = $scope.vitamins[custom_vitamin.vitamin_id[id_index]];
 				price_per_unit = 0
@@ -104,13 +107,15 @@ angular_app.controller('CartController', function($scope, $attrs, $http, myServi
 				prices.push(vitamin.price_per_unit * custom_vitamin.dosage[id_index]);
 			}
 			custom_vitamin.calculated_price = myService.CalculatePrice(prices, custom_vitamin.number_of_pills);
-			if (custom_vitamin.status == "cart"){
+			custom_vitamin.cart_item_id = cart_item._id;
+			if (cart_item.status == "cart"){
 				$scope.cart.push(custom_vitamin);
 				$scope.subtotal += Number(custom_vitamin.calculated_price); //only within cart
-			} else if (custom_vitamin.status == "save_for_later"){
+			} else if (cart_item.status == "save_for_later"){
 				$scope.save_for_later.push(custom_vitamin);
 			}
 		}
+		console.log($scope.cart);
 		$scope.subtotal = $scope.subtotal.toFixed(2);
 	}
 

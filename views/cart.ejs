@@ -30,7 +30,7 @@
                         <th>  </th>
                     </tr>
                     <tbody ng-repeat="custom_vitamin in cart" class ="generic_table">
-        
+
                         <tr ng-repeat="vitamin_id in custom_vitamin.vitamin_id">
                             <td><label class="mobile_show">Vitamin </label>{{custom_vitamin.vitamin_names[$index]}}</td>
 
@@ -38,8 +38,8 @@
                             <td ng-show="{{$last}}"><label class="mobile_show">Quantity </label>  {{custom_vitamin.number_of_pills}}</td>
                             <td ng-show="{{$last}}"> <label class="mobile_show">Price </label>${{custom_vitamin.calculated_price}}</td>
                             <td ng-show="{{$last}}"class="save_for_later_or_delete"  >  
-                                    <button type="submit" class="form-control" name="save_for_later"value="{{custom_vitamin._id}}" >Save For Later</button>
-                                    <button type="submit" class="form-control" name="delete" value="{{custom_vitamin._id}}" >X</button>
+                                    <button type="submit" class="form-control" name="save_for_later"value="{{custom_vitamin.cart_item_id}}" >Save For Later</button>
+                                    <button type="submit" class="form-control" name="delete" value="{{custom_vitamin.cart_item_id}}" >X</button>
                             </td>
                         </tr>
 
@@ -76,8 +76,8 @@
                             <td ng-show="{{$last}}"> <label class="mobile_hide">Price </label> </th> ${{custom_vitamin.calculated_price}}</td>
                              <td ng-show="{{$last}}" class="save_for_later_or_delete">  
 
-                                <button type="submit" class="form-control" name="add_to_cart" value="{{custom_vitamin._id}}" >Add To Cart</button>
-                                 <button type="submit" class="form-control" name="delete" value="{{custom_vitamin._id}}" >X</button>
+                                <button type="submit" class="form-control" name="add_to_cart" value="{{custom_vitamin.cart_item_id}}" >Add To Cart</button>
+                                 <button type="submit" class="form-control" name="delete" value="{{custom_vitamin.cart_item_id}}" >X</button>
                             </td>
                     </tr>
                 </tbody>
