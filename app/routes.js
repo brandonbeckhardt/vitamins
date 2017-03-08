@@ -131,14 +131,32 @@ module.exports = function(app, passport) {
             vitamin.dosage = form_vitamin.dosage;
             vitamin.vitamin_id = form_vitamin.vitamin_id;
             vitamin.number_of_pills = form_vitamin.number_of_pills;
-            vitamin.user_id = req.user._id;
-            vitamin.status = "cart";
+            vitamin.name = form_vitamin.custom_vitamin_name;
+
             vitamin.save(function(err,vitamin){
                 if (err) throw err;
-                console.log('Saved!');
+                console.log('Saved Vitamin!');
+                Cart_Item = require('./models/cart_item');
+                cart_item = new Cart_Item();
+                cart_item.user_id = req.user._id;
+                cart_item.custom_vitamin_id = vitamin._id;
+                cart_item.status = 'cart';
+                cart_item.save(function(err,cart_item){
+                    if (err) {
+                        Custom_Vitamin.remove({"_id":vitamin._id}, function(err){
+                            if (err) throw err;
+                            req.flash("cart_message","There has been an issue saving your vitamin.");
+                            res.redirect('/cart');
+                        });
+                        throw err;
+                    }
+                    console.log('Saved cart item');
+                });
+
                 req.flash("cart_message", "Your Custom Vitamin has been added to your cart!");
                 res.redirect('/cart');
             });
+
         } else {
             res.redirect('/cart');
         }

@@ -94,9 +94,6 @@
                     <div class="well fill_height">
                         <h3>Submit Order</h3>
                         <form action="/submit_order" method="post" name="order">
-                             <div class="form-group">
-                                <label>Order Name</label><input type="text" name="order_name">
-                             </div>
                              <input type="hidden" name="custom_vitamins" ng-value="{{custom_vitamins}}">
                              <input type="hidden" name="price" ng-value="{{(subtotal * (1+tax_percentage/100)).toFixed(2)}}">
                             <button type="submit" class="form-control">Submit</button>
