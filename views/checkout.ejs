@@ -22,6 +22,7 @@
                         <h3>Vitamins</h3>
                         <table class="generic_table table table-bordered vitamins_table table-hover  ">
                             <tr>
+                                <th>Name</th>
                                 <th>Vitamin </th>
                                 <th> Dosage </th>
                                 <th> Quantity </th>
@@ -29,6 +30,7 @@
                             </tr>
                             <tbody ng-repeat="custom_vitamin in custom_vitamins" class="generic_table ">
                                 <tr ng-repeat="vitamin_id in custom_vitamin.vitamin_id" >
+                                     <td><div ng-show="{{$first}}">{{custom_vitamin.name}}</div></td>
                                     <td>{{vitamins[vitamin_id].name}}</td>
                                     <td>{{custom_vitamin.dosage[$index]}}{{}}</td>
                                     <td ng-show="{{$last}}">  {{custom_vitamin.number_of_pills}}</td>
