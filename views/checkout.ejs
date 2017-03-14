@@ -20,27 +20,29 @@
 
                     <div class="well">
                         <h3>Vitamins</h3>
-                        <table class="generic_table table table-bordered vitamins_table table-hover  ">
-                            <tr>
-                                <th>Name</th>
-                                <th>Vitamin </th>
-                                <th> Dosage </th>
-                                <th> Quantity </th>
-                                <th> Price </th>
-                            </tr>
+                        <table class = "responsive_table generic_table table table-bordered table-hover vitamins_table" >
+                            <tr class="mobile_hide">
+                        <th><label class="mobile_hide">Name </label></th>
+                        <th><label class="mobile_hide">Vitamins </label></th>
+                        <th> <label class="mobile_hide">Dosage </label> </th>
+                        <th> <label class="mobile_hide">Quantity </label> </th>
+                        <th> <label class="mobile_hide">Price </label> </th>
+                        <th>  </th>
+                    </tr>
                             <tbody ng-repeat="custom_vitamin in custom_vitamins" class="generic_table ">
                                 <tr ng-repeat="vitamin_id in custom_vitamin.vitamin_id" >
-                                     <td><div ng-show="{{$first}}">{{custom_vitamin.name}}</div></td>
-                                    <td>{{vitamins[vitamin_id].name}}</td>
-                                    <td>{{custom_vitamin.dosage[$index]}}{{}}</td>
-                                    <td ng-show="{{$last}}">  {{custom_vitamin.number_of_pills}}</td>
+                                     <td><label class="mobile_show">Name </label><div ng-show="{{$first}}">{{custom_vitamin.name}}</div></td>
+                                    <td><label class="mobile_show">Vitamin </label>{{vitamins[vitamin_id].name}}</td>
+                                    <td><label class="mobile_show">Dosage </label>{{custom_vitamin.dosage[$index]}}{{}}</td>
+                                    <td ng-show="{{$last}}">  <label class="mobile_show">Quantity </label> {{custom_vitamin.number_of_pills}}</td>
                                     <td ng-show="{{$last}}">
                                         <input type="hidden" name="calculated_prices" ng-value="{{custom_vitamin_price(custom_vitamin)}}">
-                                        <div>  ${{custom_vitamin_price(custom_vitamin)}} </div>
+                                        <div>  <label class="mobile_show">Price </label>${{custom_vitamin_price(custom_vitamin)}} </div>
                                     </td>
                                 </tr>
                             </tbody>
                             <tr>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td class="right_text_align">Subtotal</td>
@@ -49,10 +51,12 @@
                             <tr>
                                 <td></td>
                                 <td></td>
+                                <td></td>
                                 <td class="right_text_align">Tax ({{tax_percentage}}%)</td>
                                 <td class="left_text_align">+${{(subtotal * (tax_percentage/100)).toFixed(2) }} </td>
                             </tr>
                             <tr>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td class="right_text_align"><b>Total</b></td>
