@@ -121,7 +121,7 @@ angular_app.controller('CartController', function($scope, $attrs, $http, myServi
 angular_app.controller('CheckoutController', function($scope, $attrs, $http, myService) {
 	$scope.init = function(data){	
 		data = JSON.parse(data);
-		var cart_items = data.cart_items;
+		$scope.cart_items = data.cart_items;
 		$scope.vitamins = data.vitamins;
 		$scope.addresses = data.addresses;
 		$scope.tax_percentage = tax_percentage;
@@ -132,8 +132,8 @@ angular_app.controller('CheckoutController', function($scope, $attrs, $http, myS
 		$scope.changing_address = false;
 		$scope.subtotal = 0;
 		$scope.custom_vitamins = [];
-		for (index in cart_items){
-			var cart_item = cart_items[index];
+		for (index in $scope.cart_items){
+			var cart_item = $scope.cart_items[index];
 			custom_vitamin = cart_item["custom_vitamin"][0];
 			$scope.custom_vitamins.push(custom_vitamin);
 			prices = [];

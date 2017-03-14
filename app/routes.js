@@ -257,82 +257,38 @@ module.exports = function(app, passport) {
                 res.send(html);
              });
     });
+    //Used to actually submit an order.  This submits the order in the cart, then removes them from cart
+    //once submitted.
     app.post('/submit_order',function(req, res){
         var data = req.body;
-        var Order = require('./models/Order');
-        Order.user_id = req.user.id;
-        Order.address_id = data.address_id;
-        Order.price = Number(data.price);
-        var custom_vitamins = JSON.parse(data.custom_vitamins);
-        Order.custom_vitamins = [];
-        for (idx in custom_vitamins){
-            Order.custom_vitamins.push(custom_vitamins[idx]._id);
+        var Order_Model = require('./models/Order');
+        var order = new Order_Model();
+        order.user_id = req.user.id;
+        order.address_id = data.address_id;
+        order.price = Number(data.price);
+        var cart_items = JSON.parse(data.cart_items);
+        var cart_item_ids = [];
+        order.custom_vitamins = [];
+        for (idx in cart_items){
+            cart_item_ids.push(cart_items[idx]._id);
+            order.custom_vitamins.push(cart_items[idx]["custom_vitamin"][0]._id);
         }
-        Order.time_ordered = new Date();
-        Order.status = "submitted";
-        Order.save(function(err, order){
+        order.time_ordered = new Date();
+        order.status = "submitted";
+        //Save the order
+        order.save(function(err, order){
             if (err) throw err;
-            //WILL NEED TO GET RID OF CART_ITEMS    
+            //Remove stale cart items 
+            Cart_Items = require("./models/cart_item");
+            Cart_Items.remove({_id:{$in:cart_item_ids}}, function (error, count){
+                if (error) throw error;
+                req.flash("Congrats! You have placed your order");
+                res.redirect("/profile");
+            });
         });
-
-
-
-
-
-        //Build order
-        // var user_address_info = data["user_address_info"];
-
-        // // Create order
-        // order = {};
-        // order['user_id'] = user_address_info.user_id;
-        // order['address_id'] = user_address_info.address_id;
-        // order['price'] = data.total_price;
-        // value_names = ["user_id","address_id", "price"];
-        // valueNamesToQuery = ValueNamesToQuery(value_names);
-        // valuesToQuery = ValuesToQuery(value_names, order);
-
-        // create_order_query = 'insert into orders'+valueNamesToQuery+'values'+valuesToQuery+' returning id;';
-        // db.one(create_order_query)
-        // .then(function(order){
-        //     var order_id = order.id;
-        //     var vitamin_info = data["vitamin_info"];
-        //     var orderDetails = [];
-        //     for (vit_index in vitamin_info){
-        //         var vitamin_details = {};
-        //         var vitamin = vitamin_info[vit_index];
-        //         vitamin_details['order_id'] = order_id;
-        //         vitamin_details['vitamin_id'] = vitamin.vitamin_id;
-        //         vitamin_details['dose'] = vitamin.dosage;
-        //         vitamin_details['times_per_day'] = vitamin.times_per_day;
-        //         orderDetails.push(vitamin_details);
-        //     }
-        //     var value_names = ['order_id', 'vitamin_id','dose','times_per_day'];
-        //     var valueNamesToQuery = ValueNamesToQuery(value_names);
-        //     var query_values = "";
-        //     for (detail_index in orderDetails){
-        //         detail = orderDetails[detail_index];
-        //         query_values += ValuesToQuery(value_names, detail);
-        //          if (detail_index < orderDetails.length - 1){
-        //             query_values += ","
-        //         }
-        //     }
-        //     create_order_details_query = 'insert into order_details'+valueNamesToQuery+'values'+query_values+';'
-        //     console.log(create_order_details_query);
-        //     db.query(create_order_details_query)
-        //     .then(function(i){
-        //         console.log(order_id)
-        //         res.render('order_successful.ejs', {'order_id':order_id }, function(err, html) {
-        //             res.send(html);
-        //         }); 
-        //     }).catch(function(error){
-        //         // Need to delete order from orders from orders
-        //         console.log(order_id);
-        //         db.query('delete from orders where id=' + order_id + ";");
-        //     });
-        // }).catch(function(error){
-        //     throw error;
-        // });
     });
+
+
 
     //----------------- Creation of a Vitamin (user should never see this) -------------------------
     app.get('/create_vitamin', function(req, res){

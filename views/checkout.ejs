@@ -101,7 +101,7 @@
                         <h3>Submit Order</h3>
                         <form action="/submit_order" method="post" name="order">
                             <input type="hidden" name="address_id" value="{{current_address._id}}">
-                             <input type="hidden" name="custom_vitamins" value="{{custom_vitamins}}">
+                             <input type="hidden" name="cart_items" value="{{cart_items}}">
                              <input type="hidden" name="price" value="{{(subtotal * (1+tax_percentage/100)).toFixed(2)}}">
                             <button type="submit" class="form-control">Submit</button>
                         </form>
