@@ -94,7 +94,6 @@ angular_app.controller('CartController', function($scope, $attrs, $http, myServi
 		$scope.subtotal = 0;
 		for (index in cart_items){
 			var cart_item = cart_items[index];
-			console.log(cart_item);
 			custom_vitamin = cart_item["custom_vitamin"][0];
 			custom_vitamin.vitamin_names = [];
 			prices = [];
@@ -115,7 +114,6 @@ angular_app.controller('CartController', function($scope, $attrs, $http, myServi
 				$scope.save_for_later.push(custom_vitamin);
 			}
 		}
-		console.log($scope.cart);
 		$scope.subtotal = $scope.subtotal.toFixed(2);
 	}
 
@@ -123,7 +121,7 @@ angular_app.controller('CartController', function($scope, $attrs, $http, myServi
 angular_app.controller('CheckoutController', function($scope, $attrs, $http, myService) {
 	$scope.init = function(data){	
 		data = JSON.parse(data);
-		$scope.custom_vitamins = data.custom_vitamins;
+		var cart_items = data.cart_items;
 		$scope.vitamins = data.vitamins;
 		$scope.addresses = data.addresses;
 		$scope.tax_percentage = tax_percentage;
@@ -132,8 +130,11 @@ angular_app.controller('CheckoutController', function($scope, $attrs, $http, myS
 		}
 		$scope.changing_address = false;
 		$scope.subtotal = 0;
-		for (index in $scope.custom_vitamins){
-			custom_vitamin = $scope.custom_vitamins[index];
+		$scope.custom_vitamins = [];
+		for (index in cart_items){
+			var cart_item = cart_items[index];
+			custom_vitamin = cart_item["custom_vitamin"][0];
+			$scope.custom_vitamins.push(custom_vitamin);
 			prices = [];
 			for (id_index in custom_vitamin.vitamin_id){
 				vitamin = $scope.vitamins[custom_vitamin.vitamin_id[id_index]];
@@ -143,6 +144,7 @@ angular_app.controller('CheckoutController', function($scope, $attrs, $http, myS
 			custom_vitamin.calculated_price = myService.CalculatePrice(prices, custom_vitamin.number_of_pills);
 			$scope.subtotal += Number(custom_vitamin.calculated_price); //only within cart
 		}
+		console.log($scope.custom_vitamins);
 		$scope.subtotal = $scope.subtotal.toFixed(2);
 	}
 	$scope.custom_vitamin_price = function(custom_vitamin){

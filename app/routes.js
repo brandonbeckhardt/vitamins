@@ -207,15 +207,25 @@ module.exports = function(app, passport) {
             req.flash("loginMessage", "You must login before continuing.");
             res.redirect('/login');
         } else {
-            var Custom_Vitamins = require('./models/custom_vitamin');
-            Custom_Vitamins.find({'user_id':req.user.id, 'status':'cart'},function(err, custom_vitamins){
-                var Vitamins = require('./models/vitamin');
+            var Cart_Items = require('./models/cart_item');
+
+            Cart_Items.aggregate([
+                {$match:{'user_id':new mongoose.Types.ObjectId(req.user.id), 'status':'cart'}},
+                {$lookup:
+                 {
+                   from: "custom_vitamins",
+                   localField: "custom_vitamin_id",
+                   foreignField: "_id",
+                   as: "custom_vitamin"
+                 }}
+            ],function(err,cart_items){
+                if(err) throw err;
                 var Addresses = require('./models/address');
                 Addresses.find({'user_id':req.user.id}, function(err, addresses){
-                    if (err) throw err;
-                    res.render('checkout.ejs', {'info': {'custom_vitamins':custom_vitamins,'vitamins':global.vitamins, 'addresses':addresses}, message:req.flash('checkout_message')});
-                });     
-
+                if (err) throw err;
+                    console.log(cart_items);
+                    res.render('checkout.ejs', {'info': {'cart_items':cart_items,'vitamins':global.vitamins, 'addresses':addresses}, message:req.flash('cart_message')});
+                }); 
             });
         }   
     });
