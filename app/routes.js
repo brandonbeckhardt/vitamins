@@ -102,7 +102,6 @@ module.exports = function(app, passport) {
                    as: "custom_vitamin"
                  }}],function(err,cart_items){
                     if(err) throw err;
-                    console.log(cart_items);
                     res.render('cart.ejs', {'vitamin_info': {'cart_items':cart_items,'vitamins':global.vitamins}, message:req.flash('cart_message')});
                 });
         } 
@@ -260,7 +259,26 @@ module.exports = function(app, passport) {
     });
     app.post('/submit_order',function(req, res){
         var data = req.body;
-        console.log(data);
+        var Order = require('./models/Order');
+        Order.user_id = req.user.id;
+        Order.address_id = data.address_id;
+        Order.price = Number(data.price);
+        var custom_vitamins = JSON.parse(data.custom_vitamins);
+        Order.custom_vitamins = [];
+        for (idx in custom_vitamins){
+            Order.custom_vitamins.push(custom_vitamins[idx]._id);
+        }
+        Order.time_ordered = new Date();
+        Order.status = "submitted";
+        Order.save(function(err, order){
+            if (err) throw err;
+            //WILL NEED TO GET RID OF CART_ITEMS    
+        });
+
+
+
+
+
         //Build order
         // var user_address_info = data["user_address_info"];
 

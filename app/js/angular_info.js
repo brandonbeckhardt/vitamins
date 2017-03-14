@@ -127,6 +127,7 @@ angular_app.controller('CheckoutController', function($scope, $attrs, $http, myS
 		$scope.tax_percentage = tax_percentage;
 		if ($scope.addresses.length > 0){
 			$scope.current_address = $scope.addresses[0]; //Hacky, would eventually like to make a default
+			$scope.current_address_id = $scope.current_address._id.plainTex;
 		}
 		$scope.changing_address = false;
 		$scope.subtotal = 0;
@@ -167,7 +168,6 @@ angular_app.controller('CheckoutController', function($scope, $attrs, $http, myS
 			} else {
 				$scope.current_address = $scope.old_address;
 			}
-			
 			$scope.changing_address = false;
 		} else if (input =='cancel'){
 			$scope.current_address = $scope.old_address;
