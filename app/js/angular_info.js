@@ -184,9 +184,12 @@ angular_app.controller('ConfirmationController', function($scope) {
 	}
 });
 
-angular_app.controller('OrderSuccessful', function($scope) {
-	$scope.init = function(order_id){
-		$scope.order_id = order_id;
+angular_app.controller('OrdersController', function($scope) {
+	$scope.init = function(data){
+		info = JSON.parse(data);
+		$scope.orders = info.orders;
+		$scope.vitamins = info.vitamins;
+		console.log($scope.orders);
 	}
 });
 

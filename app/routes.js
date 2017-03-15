@@ -83,7 +83,7 @@ module.exports = function(app, passport) {
             res.render('signup.ejs', { message: req.flash('signupMessage') });
     });
 
-    //--------------------------------Cart------------------------------------------------
+    //--------------------------------Cart/Orders------------------------------------------------
     app.get('/cart',function(req, res){
         if (!loggedIn(req)){
             req.session.redirect_to_cart = true;
@@ -178,7 +178,7 @@ module.exports = function(app, passport) {
             CartItems.findOneAndUpdate({"_id":req.body.save_for_later}, {status:"save_for_later"},function(err, custom_vitamin) {
                 if (err) throw err;
                 req.flash("cart_message","Your custom vitamin has been saved for later");
-                res.redirect('/cart');
+                rdes.redirect('/cart');
             });
         } else if ( req.body.add_to_cart){
              CartItems.findOneAndUpdate({"_id":req.body.add_to_cart}, {status:"cart"},function(err, custom_vitamin) {
@@ -198,6 +198,39 @@ module.exports = function(app, passport) {
             res.redirect('/cart');
         }
     });
+    app.get('/orders', function(req,res){
+        if (!loggedIn(req)){
+            req.flash("loginMessage", "You must login before continuing.");
+            res.redirect('/login');
+        } else {
+            Orders = require("./models/order");
+            Orders.aggregate([
+                {$match:{'user_id':new mongoose.Types.ObjectId(req.user.id)}},
+                //Finds multiple custom_vitamins per order, however separates orders based on custom vitamin
+                {$unwind: "$custom_vitamin_ids"}, 
+                {$lookup:
+                 {
+                   from: "custom_vitamins",
+                   localField: "custom_vitamin_ids",
+                   foreignField: "_id",
+                   as: "custom_vitamins"
+                 }},
+                 // Groups the orders back together based on id, specifies what to do with each field
+                 {$group: {
+                    _id: '$_id',
+                    status: {$first:'$status'},
+                    time_ordered: {$first:'$time_ordered'},
+                    price: {$first:'$price'},
+                    address_id: {$first:'$address_id'},
+                    user_id: {$first:'$user_id'},
+                    custom_vitamins:{$push:'$custom_vitamins'} //concatenate
+                }}
+            ],function(err, orders){
+                res.render('orders.ejs',{'info':{'orders':orders, 'vitamins':global.vitamins},message:req.flash('order_submitted_message')});
+            });
+        }
+    });
+
     // -------------------------- Checkout -----------------------------------------------
     //
     app.get('/checkout', function(req,res){
@@ -261,17 +294,17 @@ module.exports = function(app, passport) {
     //once submitted.
     app.post('/submit_order',function(req, res){
         var data = req.body;
-        var Order_Model = require('./models/Order');
+        var Order_Model = require('./models/order');
         var order = new Order_Model();
         order.user_id = req.user.id;
         order.address_id = data.address_id;
         order.price = Number(data.price);
         var cart_items = JSON.parse(data.cart_items);
         var cart_item_ids = [];
-        order.custom_vitamins = [];
+        order.custom_vitamin_idss = [];
         for (idx in cart_items){
             cart_item_ids.push(cart_items[idx]._id);
-            order.custom_vitamins.push(cart_items[idx]["custom_vitamin"][0]._id);
+            order.custom_vitamin_ids.push(cart_items[idx]["custom_vitamin"][0]._id);
         }
         order.time_ordered = new Date();
         order.status = "submitted";
@@ -282,8 +315,8 @@ module.exports = function(app, passport) {
             Cart_Items = require("./models/cart_item");
             Cart_Items.remove({_id:{$in:cart_item_ids}}, function (error, count){
                 if (error) throw error;
-                req.flash("Congrats! You have placed your order");
-                res.redirect("/profile");
+                req.flash("order_submitted_message","Congrats! Your order has been placed");
+                res.redirect("/orders");
             });
         });
     });
