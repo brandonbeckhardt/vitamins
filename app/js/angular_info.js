@@ -2,6 +2,13 @@ var angular_app = angular.module('app', []);
 
 var tax_percentage= 8.75;
 
+var month_names = [
+    "January", "February", "March",
+    "April", "May", "June",
+    "July", "August", "September",
+    "October", "November", "December"
+];
+
 angular_app.factory('myService', function(){
 	return{
 		CalculatePrice: function(prices, number_of_pills){
@@ -190,6 +197,11 @@ angular_app.controller('OrdersController', function($scope) {
 		$scope.orders = info.orders;
 		$scope.vitamins = info.vitamins;
 		console.log($scope.orders);
+	}
+	$scope.toDateString = function(dateString){
+		date = new Date(dateString);
+		return month_names[date.getMonth()-1] + " " + date.getDay() + ", " + date.getFullYear();
+
 	}
 });
 
