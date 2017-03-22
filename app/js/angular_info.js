@@ -1,5 +1,13 @@
 var angular_app = angular.module('app', []);
 
+var tax_percentage= 8.75;
+
+var month_names = [
+    "January", "February", "March",
+    "April", "May", "June",
+    "July", "August", "September",
+    "October", "November", "December"
+];
 
 angular_app.factory('myService', function(){
 	return{
@@ -86,15 +94,17 @@ angular_app.controller('VitaminsController', function($scope, $attrs, myService)
 angular_app.controller('CartController', function($scope, $attrs, $http, myService) {
 	$scope.init = function(data){	
 		data = JSON.parse(data);
-		var custom_vitamins = data.custom_vitamins;
+		var cart_items = data.cart_items;
 		$scope.vitamins = data.vitamins;
 		$scope.cart = [];
 		$scope.save_for_later = [];
-		$scope.total_price = 0;
-		for (index in custom_vitamins){
-			custom_vitamin = custom_vitamins[index];
+		$scope.subtotal = 0;
+		for (index in cart_items){
+			var cart_item = cart_items[index];
+			custom_vitamin = cart_item["custom_vitamin"][0];
 			custom_vitamin.vitamin_names = [];
 			prices = [];
+
 			for (id_index in custom_vitamin.vitamin_id){
 				// vitamin = $scope.vitamins[custom_vitamin.vitamin_id[id_index]];
 				price_per_unit = 0
@@ -103,30 +113,36 @@ angular_app.controller('CartController', function($scope, $attrs, $http, myServi
 				prices.push(vitamin.price_per_unit * custom_vitamin.dosage[id_index]);
 			}
 			custom_vitamin.calculated_price = myService.CalculatePrice(prices, custom_vitamin.number_of_pills);
-			if (custom_vitamin.status == "cart"){
+			custom_vitamin.cart_item_id = cart_item._id;
+			if (cart_item.status == "cart"){
 				$scope.cart.push(custom_vitamin);
-				$scope.total_price += Number(custom_vitamin.calculated_price); //only within cart
-			} else if (custom_vitamin.status == "save_for_later"){
+				$scope.subtotal += Number(custom_vitamin.calculated_price); //only within cart
+			} else if (cart_item.status == "save_for_later"){
 				$scope.save_for_later.push(custom_vitamin);
 			}
 		}
-		$scope.total_price = $scope.total_price.toFixed(2);
+		$scope.subtotal = $scope.subtotal.toFixed(2);
 	}
 
 });
 angular_app.controller('CheckoutController', function($scope, $attrs, $http, myService) {
 	$scope.init = function(data){	
 		data = JSON.parse(data);
-		$scope.custom_vitamins = data.custom_vitamins;
+		$scope.cart_items = data.cart_items;
 		$scope.vitamins = data.vitamins;
 		$scope.addresses = data.addresses;
+		$scope.tax_percentage = tax_percentage;
 		if ($scope.addresses.length > 0){
 			$scope.current_address = $scope.addresses[0]; //Hacky, would eventually like to make a default
+			$scope.current_address_id = $scope.current_address._id.plainTex;
 		}
 		$scope.changing_address = false;
-		$scope.total_price = 0;
-		for (index in $scope.custom_vitamins){
-			custom_vitamin = $scope.custom_vitamins[index];
+		$scope.subtotal = 0;
+		$scope.custom_vitamins = [];
+		for (index in $scope.cart_items){
+			var cart_item = $scope.cart_items[index];
+			custom_vitamin = cart_item["custom_vitamin"][0];
+			$scope.custom_vitamins.push(custom_vitamin);
 			prices = [];
 			for (id_index in custom_vitamin.vitamin_id){
 				vitamin = $scope.vitamins[custom_vitamin.vitamin_id[id_index]];
@@ -134,9 +150,10 @@ angular_app.controller('CheckoutController', function($scope, $attrs, $http, myS
 				prices.push(vitamin.price_per_unit * dosage);
 			}
 			custom_vitamin.calculated_price = myService.CalculatePrice(prices, custom_vitamin.number_of_pills);
-			$scope.total_price += Number(custom_vitamin.calculated_price); //only within cart
+			$scope.subtotal += Number(custom_vitamin.calculated_price); //only within cart
 		}
-		$scope.total_price = $scope.total_price.toFixed(2);
+		console.log($scope.custom_vitamins);
+		$scope.subtotal = $scope.subtotal.toFixed(2);
 	}
 	$scope.custom_vitamin_price = function(custom_vitamin){
 		var prices = [];
@@ -158,7 +175,6 @@ angular_app.controller('CheckoutController', function($scope, $attrs, $http, myS
 			} else {
 				$scope.current_address = $scope.old_address;
 			}
-			
 			$scope.changing_address = false;
 		} else if (input =='cancel'){
 			$scope.current_address = $scope.old_address;
@@ -175,9 +191,17 @@ angular_app.controller('ConfirmationController', function($scope) {
 	}
 });
 
-angular_app.controller('OrderSuccessful', function($scope) {
-	$scope.init = function(order_id){
-		$scope.order_id = order_id;
+angular_app.controller('OrdersController', function($scope) {
+	$scope.init = function(data){
+		info = JSON.parse(data);
+		$scope.orders = info.orders;
+		$scope.vitamins = info.vitamins;
+		console.log($scope.orders);
+	}
+	$scope.toDateString = function(dateString){
+		date = new Date(dateString);
+		return month_names[date.getMonth()-1] + " " + date.getDay() + ", " + date.getFullYear();
+
 	}
 });
 

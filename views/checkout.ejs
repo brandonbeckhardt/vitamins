@@ -20,41 +20,47 @@
 
                     <div class="well">
                         <h3>Vitamins</h3>
-                        <table class="generic_table table table-bordered vitamins_table table-hover  ">
-                            <tr>
-                                <th>Vitamin </th>
-                                <th> Dosage </th>
-                                <th> Quantity </th>
-                                <th> Price </th>
-                            </tr>
+                        <table class = "responsive_table generic_table table table-bordered table-hover vitamins_table" >
+                            <tr class="mobile_hide">
+                        <th><label class="mobile_hide">Name </label></th>
+                        <th><label class="mobile_hide">Vitamins </label></th>
+                        <th> <label class="mobile_hide">Dosage </label> </th>
+                        <th> <label class="mobile_hide">Quantity </label> </th>
+                        <th> <label class="mobile_hide">Price </label> </th>
+                        <th>  </th>
+                    </tr>
                             <tbody ng-repeat="custom_vitamin in custom_vitamins" class="generic_table ">
                                 <tr ng-repeat="vitamin_id in custom_vitamin.vitamin_id" >
-                                    <td>{{vitamins[vitamin_id].name}}</td>
-                                    <td>{{custom_vitamin.dosage[$index]}}{{}}</td>
-                                    <td ng-show="{{$last}}">  {{custom_vitamin.number_of_pills}}</td>
+                                     <td><label class="mobile_show">Name </label><div ng-show="{{$first}}">{{custom_vitamin.name}}</div></td>
+                                    <td><label class="mobile_show">Vitamin </label>{{vitamins[vitamin_id].name}}</td>
+                                    <td><label class="mobile_show">Dosage </label>{{custom_vitamin.dosage[$index]}}{{}}</td>
+                                    <td ng-show="{{$last}}">  <label class="mobile_show">Quantity </label> {{custom_vitamin.number_of_pills}}</td>
                                     <td ng-show="{{$last}}">
                                         <input type="hidden" name="calculated_prices" ng-value="{{custom_vitamin_price(custom_vitamin)}}">
-                                        <div>  ${{custom_vitamin_price(custom_vitamin)}} </div>
+                                        <div>  <label class="mobile_show">Price </label>${{custom_vitamin_price(custom_vitamin)}} </div>
                                     </td>
                                 </tr>
                             </tbody>
                             <tr>
                                 <td></td>
                                 <td></td>
+                                <td></td>
                                 <td class="right_text_align">Subtotal</td>
-                                <td class="left_text_align">${{total_price}}</td>
+                                <td class="left_text_align">${{subtotal}}</td>
                             </tr>
                             <tr>
                                 <td></td>
                                 <td></td>
-                                <td class="right_text_align">Tax (8.75%)</td>
-                                <td class="left_text_align">+${{(total_price * .0875).toFixed(2) }} </td>
+                                <td></td>
+                                <td class="right_text_align">Tax ({{tax_percentage}}%)</td>
+                                <td class="left_text_align">+${{(subtotal * (tax_percentage/100)).toFixed(2) }} </td>
                             </tr>
                             <tr>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td class="right_text_align"><b>Total</b></td>
-                                <td class="left_text_align"><b>${{(total_price * 1.0875).toFixed(2)}} </b></td>
+                                <td class="left_text_align"><b>${{(subtotal * (1+tax_percentage/100)).toFixed(2)}} </b></td>
                             </tr>
                         </table>
                     </div>
@@ -90,6 +96,15 @@
                 <div class="col-sm-6">
                     <div class="well fill_height">
                         <h3>Payment</h3>
+                    </div>
+                    <div class="well fill_height">
+                        <h3>Submit Order</h3>
+                        <form action="/submit_order" method="post" name="order">
+                            <input type="hidden" name="address_id" value="{{current_address._id}}">
+                             <input type="hidden" name="cart_items" value="{{cart_items}}">
+                             <input type="hidden" name="price" value="{{(subtotal * (1+tax_percentage/100)).toFixed(2)}}">
+                            <button type="submit" class="form-control">Submit</button>
+                        </form>
                     </div>
                 </div>
             </div> 

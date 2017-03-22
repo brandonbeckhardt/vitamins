@@ -1,0 +1,49 @@
+<head>
+	<link rel="stylesheet" href="/css/vitamins_page.css" crossorigin="anonymous">
+</head>
+<body ng-app="app">
+<div  ng-controller="OrdersController"  ng-init="init('<%= JSON.stringify(info) %>')">
+	<div class="container">
+
+    <div class="page-header text-center">
+        <h1></span> Previous Orders </h1>
+    </div>
+     <% if (message.length > 0) { %>
+        <div class="alert alert-success"><%= message %></div>
+    <% } %>
+
+    <div class="row">
+        <!-- LOCAL INFORMATION -->
+        <div class="col-sm-12">
+            <form method="post" action="">
+            <div class="well">
+                <h3>Orders</h3>
+                
+                <table class = "responsive_table generic_table table table-bordered table-hover vitamins_table" >
+                    <tr class="mobile_hide">
+                        <th><label class="mobile_hide">Order Date </label></th>
+                        <th><label class="mobile_hide">Vitamins </label></th>
+          
+                        <th> <label class="mobile_hide">Quantity </label> </th>
+                        <th> <label class="mobile_hide">Price </label> </th>
+                    </tr>
+                    <tbody ng-repeat="order in orders" class ="generic_table">
+                    	<tr ng-repeat="custom_vitamin in order.custom_vitamins">
+							<td><div ng-show="{{$first}}"><label class="mobile_show">Order Date: </label>{{toDateString(order.time_ordered)}}</div></td>
+							<td>
+								<label>Custom Vitamin Name: </label>{{custom_vitamin[0].name}}
+								<div ng-repeat="vitamin_id in custom_vitamin[0].vitamin_id track by $index">
+									{{vitamins[vitamin_id].name}}, Dosage: {{custom_vitamin[0].dosage[$index]}}{{vitamins[vitamin_id].units}}
+								</div>
+							</td>
+							<td><label class="mobile_show">Quantity: </label>{{custom_vitamin[0].number_of_pills}} pills</td>
+							<td><div ng-show="{{$last}}"><label class="mobile_show">Price: </label>${{order.price.toFixed(2)}}</div></td>
+						</tr>
+                    </tbody>
+                </table>
+            </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
