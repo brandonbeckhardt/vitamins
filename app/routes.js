@@ -178,7 +178,7 @@ module.exports = function(app, passport) {
             CartItems.findOneAndUpdate({"_id":req.body.save_for_later}, {status:"save_for_later"},function(err, custom_vitamin) {
                 if (err) throw err;
                 req.flash("cart_message","Your custom vitamin has been saved for later");
-                rdes.redirect('/cart');
+                res.redirect('/cart');
             });
         } else if ( req.body.add_to_cart){
              CartItems.findOneAndUpdate({"_id":req.body.add_to_cart}, {status:"cart"},function(err, custom_vitamin) {
