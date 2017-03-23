@@ -2,7 +2,5 @@
 // config/database.js
 // url to database
 module.exports = {
-    // 'url' : "mongodb://beb619:gattaca94@jello.modulusmongo.net:27017/eziran3U"
-    'url' : 'mongodb://localhost:27017/vitamins_1'
-    // 'postgres:///vitamins'
+    'url' : 'mongodb://custom_vits:nYKc3ImemqnN8Iew@customvitamin1-shard-00-00-nmj7t.mongodb.net:27017,customvitamin1-shard-00-01-nmj7t.mongodb.net:27017,customvitamin1-shard-00-02-nmj7t.mongodb.net:27017/custom_vitamins?ssl=true&replicaSet=CustomVitamin1-shard-0&authSource=admin'
 };
