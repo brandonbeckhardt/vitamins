@@ -17,6 +17,7 @@ module.exports = function(app, passport) {
     // we will use route middleware to verify this (the isLoggedIn function)
     app.get('/profile', isLoggedIn, function(req, res) {
         // If we were at Add Address page before, redirect back to it
+        app.locals={'user_first_name':req.user.first_name}; //Set first_name
         if (req.session.redirect_to_add_address){
             req.session.redirect_to_add_address = false;
             res.redirect('/add_address');
@@ -383,6 +384,7 @@ module.exports = function(app, passport) {
       // Login/Logout Info
       app.get('/logout', function(req, res) {
             req.logout();
+            app.locals={};
             res.redirect('/');
         });
      // route middleware to make sure a user is logged in.
